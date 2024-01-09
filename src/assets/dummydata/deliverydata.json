@@ -1,0 +1,9 @@
+[
+  {
+    "pendingpayment": 1200,
+    "cylinderHeld": 10,
+    "discount": 10,
+    "securityDeposit": 1600,
+    "paymentMode": ["cash", "check", "online"]
+  }
+]

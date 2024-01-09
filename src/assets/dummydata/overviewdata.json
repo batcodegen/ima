@@ -1,0 +1,9 @@
+{
+  "emptyCylinderData": {
+    "total": 20
+  },
+  "filledCylinderData": {
+    "total": 100,
+    "amount": 4300
+  }
+}

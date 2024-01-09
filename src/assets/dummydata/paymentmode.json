@@ -1,0 +1,14 @@
+[
+  {
+    "name": "cash",
+    "value": "cash"
+  },
+  {
+    "name": "online",
+    "value": "online"
+  },
+  {
+    "name": "check",
+    "value": "check"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "token": "f85f4412dfba3e7386cc5ba69bc280f9af63fdae",
+  "user": {
+    "id": 1,
+    "email": "cust1@gmail.com",
+    "first_name": "Ganesh",
+    "last_name": "Vishu",
+    "role": "customer",
+    "salary": 0
+  }
+}

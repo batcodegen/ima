@@ -1,0 +1,27 @@
+[
+  {
+    "id": "1",
+    "value": "8kg",
+    "price": 200
+  },
+  {
+    "id": "2",
+    "value": "12kg",
+    "price": 500
+  },
+  {
+    "id": "3",
+    "value": "17kg",
+    "price": 800
+  },
+  {
+    "id": "4",
+    "value": "20kg",
+    "price": 1000
+  },
+  {
+    "id": "5",
+    "value": "33kg",
+    "price": 1200
+  }
+]

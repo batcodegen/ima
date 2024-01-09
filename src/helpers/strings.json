@@ -1,0 +1,20 @@
+{
+  "deliveryTitle": "Cylinder Delivery - Refill",
+  "customerName": "Customer Name",
+  "cylinderHeld": "Cylinders Held",
+  "pendingPayment": "Pending Payment",
+  "delivered": "Delivered",
+  "collected": "Collected",
+  "paymentToCollect": "Bill amount",
+  "securityDeposit": "Security Deposit",
+  "paymentCollected": "Payment Collected",
+  "balance": "Balance",
+  "paymentMode": "Payment Mode",
+  "discount": "Discount",
+  "rate": "Rate",
+  "category": "Category",
+  "type": "Type",
+  "modeofpayment": "Mode of payment",
+  "finalbillamount": "Final Bill Amount",
+  "somethingwentwrong": "Something went wrong. Please try again."
+}

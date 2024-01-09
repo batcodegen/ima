@@ -1,0 +1,78 @@
+{
+  "summaryreport": [
+    {
+      "weight": "12kg", // product
+      "filled": 30,
+      "empty": 12
+    },
+    {
+      "weight": "17kg",
+      "filled": 60,
+      "empty": 22
+    },
+    {
+      "weight": "20kg",
+      "filled": 70,
+      "empty": 72
+    },
+    {
+      "weight": "22kg",
+      "filled": 40,
+      "empty": 52
+    },
+    {
+      "weight": "30kg",
+      "filled": 10,
+      "empty": 2
+    }
+  ],
+  "locationreport": [
+    {
+      "id": "1",
+      "location": "warehouse",
+      "stock": [
+        {
+          "weight": "12kg",
+          "filled": 60,
+          "empty": 10
+        },
+        {
+          "weight": "17kg",
+          "filled": 110,
+          "empty": 5
+        },
+        {
+          "weight": "33kg",
+          "filled": 160,
+          "empty": 19
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "location": "office",
+      "stock": [
+        {
+          "weight": "12kg",
+          "filled": 90,
+          "empty": 10
+        },
+        {
+          "weight": "17kg",
+          "filled": 11,
+          "empty": 43
+        },
+        {
+          "weight": "20kg",
+          "filled": 16,
+          "empty": 1
+        },
+        {
+          "weight": "33kg",
+          "filled": 30,
+          "empty": 19
+        }
+      ]
+    }
+  ]
+}
