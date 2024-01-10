@@ -9,6 +9,8 @@ import {
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {onLogout} from '../redux/authReducer';
+import FinanceReport from '../screens/admin/FinanceReport';
+import StockReport from '../screens/admin/StockReport';
 
 const AdminDrawerStack = createDrawerNavigator();
 
@@ -50,13 +52,23 @@ const AdminStack = () => {
   return (
     <AdminDrawerStack.Navigator
       drawerType="front"
-      screenOptions={{headerShown: true}}
+      screenOptions={{headerShown: true, headerTitleAlign: 'center'}}
       initialRouteName={ROUTES.DASHBOARD}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <AdminDrawerStack.Screen
         name={ROUTES.DASHBOARD}
         component={Dashboard}
-        options={{title: 'Dashboard', headerTitleAlign: 'center'}}
+        options={{title: 'Dashboard'}}
+      />
+      <AdminDrawerStack.Screen
+        name={ROUTES.FINANCEREPORT}
+        component={FinanceReport}
+        options={{title: 'Finance Report'}}
+      />
+      <AdminDrawerStack.Screen
+        name={ROUTES.STOCKREPORT}
+        component={StockReport}
+        options={{title: 'Stock Report'}}
       />
     </AdminDrawerStack.Navigator>
   );

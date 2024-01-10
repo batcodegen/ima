@@ -1,3 +1,5 @@
+import strings from './strings.json';
+
 function formatToLocalRupee(number) {
   if (!number) {
     return 0;
@@ -22,4 +24,16 @@ function formatToLocalRupee(number) {
   }
 }
 
-export {formatToLocalRupee};
+function formatRequiredFieldsMessage(response) {
+  if (!response) {
+    return strings.somethingwentwrong;
+  }
+
+  const requiredFields = Object.entries(response)
+    .filter(([, messages]) => messages.length > 0)
+    .map(([field, messages]) => `${field} - ${messages[0]}`);
+
+  return requiredFields.join('\n');
+}
+
+export {formatToLocalRupee, formatRequiredFieldsMessage};

@@ -1,7 +1,7 @@
 {
   "deliveryTitle": "Cylinder Delivery - Refill",
   "customerName": "Customer Name",
-  "cylinderHeld": "Cylinders Held",
+  "cylinderHeld": "Cylinders at location",
   "pendingPayment": "Pending Payment",
   "delivered": "Delivered",
   "collected": "Collected",
@@ -16,5 +16,7 @@
   "type": "Type",
   "modeofpayment": "Mode of payment",
   "finalbillamount": "Final Bill Amount",
-  "somethingwentwrong": "Something went wrong. Please try again."
+  "somethingwentwrong": "Something went wrong. Please try again.",
+  "newsecuritydeposit": "New Deposit Collected",
+  "contactnumber": "Contact Number"
 }

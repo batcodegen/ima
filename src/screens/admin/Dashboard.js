@@ -1,44 +1,25 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {useFinanceReport} from '../../hooks/useAdminDashboard';
-import {formatToLocalRupee} from '../../helpers/utils';
+import {ROUTES} from '../../navigator/routes';
 
-const Dashboard = () => {
-  const {data} = useFinanceReport();
+const Dashboard = ({navigation}) => {
+  const navigateTo = screenName => {
+    navigation.navigate(screenName);
+  };
   return (
-    <View style={styles.topcontainer}>
-      <View style={styles.container}>
-        <View style={styles.revenueContainer}>
-          <Text style={styles.title}>{'Total Revenue'}</Text>
-          <Text style={styles.number}>{`${formatToLocalRupee(
-            data?.totalrevenue,
-          )}`}</Text>
-        </View>
-        <View style={styles.revenueContainer}>
-          <Text style={styles.title}>{'Total Purchase'}</Text>
-          <Text style={styles.number}>{`${formatToLocalRupee(
-            data?.totalpurchase,
-          )}`}</Text>
-        </View>
-        <View style={styles.revenueContainer}>
-          <Text style={styles.title}>{'Total Salary'}</Text>
-          <Text style={styles.number}>{`${formatToLocalRupee(
-            data?.totalsalary,
-          )}`}</Text>
-        </View>
-        <View style={styles.revenueContainer}>
-          <Text style={styles.title}>{'Total Expenses'}</Text>
-          <Text style={styles.number}>{`${formatToLocalRupee(
-            data?.totalexpenses,
-          )}`}</Text>
-        </View>
-        <View style={styles.revenueContainer}>
-          <Text style={styles.title}>{'Total Profit'}</Text>
-          <Text style={styles.number}>{`${formatToLocalRupee(
-            data?.profit,
-          )}`}</Text>
-        </View>
-      </View>
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.card1}
+        activeOpacity={0.6}
+        onPress={() => navigateTo(ROUTES.STOCKREPORT)}>
+        <Text style={styles.text}>{'Stock Report'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.card2}
+        activeOpacity={0.6}
+        onPress={() => navigateTo(ROUTES.FINANCEREPORT)}>
+        <Text style={styles.text}>{'Finance Report'}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -46,23 +27,20 @@ const Dashboard = () => {
 export default Dashboard;
 
 const styles = StyleSheet.create({
-  topcontainer: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
   container: {
-    padding: 20,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  revenueContainer: {
-    backgroundColor: 'lightblue',
-    borderRadius: 5,
-    marginBottom: 20,
-    padding: 20,
+    flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    width: '48%',
+    justifyContent: 'center',
+  },
+  text: {fontWeight: 'bold', fontSize: 20, color: 'black'},
+  card1: {
+    width: '80%',
+    height: 100,
+    backgroundColor: 'lightblue',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -72,6 +50,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
-  title: {fontSize: 18, textAlign: 'center', color: 'black'},
-  number: {fontSize: 16, marginTop: 10, fontWeight: 'bold', color: 'black'},
+  card2: {
+    marginTop: 20,
+    width: '80%',
+    height: 100,
+    backgroundColor: 'lightcyan',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
 });

@@ -5,6 +5,9 @@ import logger from './logger/middlewarelogger';
 import rootReducer from './rootReducer';
 import {loginApi} from '../api/login';
 import {financeApi} from '../api/admin/finance';
+import {stockReportApi} from '../api/admin/stock';
+import {deliveryApi} from '../api/admin/delivery';
+import {createCustomerApi} from '../api/customer/newcustomer';
 
 function configureAppStore() {
   const store = configureStore({
@@ -13,7 +16,10 @@ function configureAppStore() {
       getDefaultMiddleware({serializableCheck: false})
         .prepend(logger)
         .concat(loginApi.middleware) // add new api middleware here, e.g. .concat(loginApi.middleware)
-        .concat(financeApi.middleware),
+        .concat(financeApi.middleware)
+        .concat(stockReportApi.middleware)
+        .concat(deliveryApi.middleware)
+        .concat(createCustomerApi.middleware),
     enhancers: getDefaultEnhancers =>
       getDefaultEnhancers(monitorReducerEnhancer),
   });

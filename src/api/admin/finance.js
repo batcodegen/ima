@@ -8,7 +8,7 @@ export const financeApi = createApi({
     prepareHeaders: (baseHeaders, {getState}) => {
       const token = getState().auth.token;
       if (token) {
-        baseHeaders.set('Authorization', `Bearer ${token}`);
+        baseHeaders.set('Authorization', `Token ${token}`);
       }
       return baseHeaders;
     },

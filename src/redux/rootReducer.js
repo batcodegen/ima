@@ -5,6 +5,9 @@ import authReducer from './authReducer';
 import {loginApi} from '../api/login';
 import {financeApi} from '../api/admin/finance';
 import appLoaderReducer from './loaderReducer';
+import {stockReportApi} from '../api/admin/stock';
+import {deliveryApi} from '../api/admin/delivery';
+import {createCustomerApi} from '../api/customer/newcustomer';
 
 const persistConfig = {
   key: 'root',
@@ -17,6 +20,9 @@ const rootReducer = combineReducers({
   appLoader: appLoaderReducer,
   [loginApi.reducerPath]: loginApi.reducer,
   [financeApi.reducerPath]: financeApi.reducer,
+  [stockReportApi.reducerPath]: stockReportApi.reducer,
+  [deliveryApi.reducerPath]: deliveryApi.reducer,
+  [createCustomerApi.reducerPath]: createCustomerApi.reducer,
 });
 
 export default rootReducer;

@@ -1,9 +1,76 @@
-[
-  {
-    "pendingpayment": 1200,
-    "cylinderHeld": 10,
-    "discount": 10,
-    "securityDeposit": 1600,
-    "paymentMode": ["cash", "check", "online"]
-  }
-]
+{
+  "product_list": [
+    {
+      "id": "1",
+      "name": "8kg",
+      "price": 200
+    },
+    {
+      "id": "2",
+      "name": "12kg",
+      "price": 500
+    },
+    {
+      "id": "3",
+      "name": "17kg",
+      "price": 800
+    },
+    {
+      "id": "4",
+      "name": "20kg",
+      "price": 1000
+    },
+    {
+      "id": "5",
+      "name": "33kg",
+      "price": 1200
+    }
+  ],
+  "customers_list": [
+    {
+      "id": "1",
+      "name": "Ganesh",
+      "contact": "987654321",
+      "pendingpayment": 1200,
+      "cylinderHeld": 17,
+      "discount": 14,
+      "securityDeposit": 2600
+    },
+    {
+      "id": "2",
+      "name": "Pratik",
+      "contact": "987654321",
+      "pendingpayment": 1250,
+      "cylinderHeld": 13,
+      "discount": 15,
+      "securityDeposit": 1602
+    },
+    {
+      "id": "3",
+      "name": "Raj",
+      "contact": "987654321",
+      "pendingpayment": 4200,
+      "cylinderHeld": 10,
+      "discount": 19,
+      "securityDeposit": 1665
+    },
+    {
+      "id": "4",
+      "name": "Tapan",
+      "contact": "987654321",
+      "pendingpayment": 5200,
+      "cylinderHeld": 10,
+      "discount": 12,
+      "securityDeposit": 1665
+    },
+    {
+      "id": "5",
+      "name": "Tanmay",
+      "contact": "987654321",
+      "pendingpayment": 7200,
+      "cylinderHeld": 16,
+      "discount": 13,
+      "securityDeposit": 1691
+    }
+  ]
+}
