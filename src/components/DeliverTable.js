@@ -13,21 +13,32 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
   const [quantity, setQuantity] = useState('1');
   const [selectedWeight, setSelectedWeight] = useState('');
   const [rate, setRate] = useState(0);
+  const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     if (data) {
-      setSelectedWeight(data?.[0]?.name);
+      setSelectedWeight(data?.[0]);
       setRate(data?.[0]?.price);
+      setDiscount(data?.[0]?.discount ?? 0);
     }
   }, [data]);
 
-  const calculateRate = (weight, quantityText) => {
-    const selectedObject = data.find(item => item.name === weight.name);
+  const calculateRateAndDiscount = (weight, quantityText) => {
+    const selectedObject = data.find(item => item.product === weight.product);
     const rates = quantityText
       ? selectedObject.price * parseFloat(quantityText)
       : 0;
-    setRate(rates);
-    updateData(index, {quantity: quantityText, weight: weight, rate: rates});
+    const discountPrice = quantityText
+      ? parseFloat(quantityText) * parseFloat(weight?.discount ?? 0)
+      : 0;
+    setRate(selectedObject.price);
+    setDiscount(weight?.discount ?? 0);
+    updateData(index, {
+      quantity: quantityText,
+      weight: weight,
+      rate: rates,
+      calculatedDisc: discountPrice,
+    });
   };
 
   if (!data) {
@@ -40,12 +51,12 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
         <View style={styles.dropContainer}>
           <DropDownFile
             data={data}
-            labelField={'name'}
-            valueField={'name'}
+            labelField={'product'}
+            valueField={'product'}
             showSearch={false}
             onSelect={item => {
               setSelectedWeight(item);
-              calculateRate(item, quantity);
+              calculateRateAndDiscount(item, quantity);
             }}
           />
         </View>
@@ -58,7 +69,7 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
             onChangeText={text => {
               const sanitizedText = text.replace(/[^0-9]/g, '');
               setQuantity(sanitizedText);
-              calculateRate(selectedWeight, sanitizedText);
+              calculateRateAndDiscount(selectedWeight, sanitizedText);
             }}
           />
         </View>
@@ -66,6 +77,11 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
           <Text
             ellipsizeMode="tail"
             style={{color: 'black'}}>{`₹${rate}`}</Text>
+        </View>
+        <View style={styles.rateContainer}>
+          <Text
+            ellipsizeMode="tail"
+            style={{color: 'black'}}>{`₹${discount}`}</Text>
         </View>
         {index > 0 ? (
           <TouchableOpacity style={{flex: 0.2}} onPress={() => onRemove(index)}>
@@ -104,11 +120,13 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     padding: 5,
-    borderColor: 'black',
+    borderColor: 'gainsboro',
     backgroundColor: 'white',
     textAlign: 'center',
-    width: 50,
+    width: 40,
+    height: 30,
     color: 'black',
+    borderRadius: 5,
   },
   rateContainer: {flex: 0.8, alignItems: 'center'},
 });

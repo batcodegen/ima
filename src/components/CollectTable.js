@@ -15,7 +15,7 @@ const CollectTable = ({onRemove, index, updateData, itemsLength, data}) => {
 
   useEffect(() => {
     if (data) {
-      setSelectedWeight(data?.[0]?.name);
+      setSelectedWeight(data?.[0]);
     }
   }, [data]);
 
@@ -29,8 +29,8 @@ const CollectTable = ({onRemove, index, updateData, itemsLength, data}) => {
         <View style={styles.dropContainer}>
           <DropDownFile
             data={data}
-            labelField={'name'}
-            valueField={'name'}
+            labelField={'product'}
+            valueField={'product'}
             showSearch={false}
             onSelect={item => {
               setSelectedWeight(item);
@@ -58,6 +58,12 @@ const CollectTable = ({onRemove, index, updateData, itemsLength, data}) => {
         ) : (
           <View style={{flex: itemsLength > 1 ? 0.2 : 0}} />
         )}
+        <View style={styles.rateContainer}>
+          <Text>{''}</Text>
+        </View>
+        <View style={styles.rateContainer}>
+          <Text>{''}</Text>
+        </View>
       </View>
     </View>
   );
@@ -88,11 +94,13 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     padding: 5,
-    borderColor: 'black',
+    borderColor: 'gainsboro',
     backgroundColor: 'white',
     textAlign: 'center',
-    width: 50,
+    width: 40,
+    height: 30,
     color: 'black',
+    borderRadius: 5,
   },
   rateContainer: {flex: 0.8, alignItems: 'center'},
 });

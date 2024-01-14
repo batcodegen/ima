@@ -1,14 +1,20 @@
 import {useDispatch} from 'react-redux';
 import {updateLoaderState} from '../redux/loaderReducer';
-import translation from '../helpers/strings.json';
 import {useEffect} from 'react';
-import {useGetDeliveryDataQuery} from '../api/admin/delivery';
+import {
+  useGetDeliveryDataQuery,
+  useLazyGetDeliveryDataQuery,
+} from '../api/admin/delivery';
 import {useCreateCustomerMutation} from '../api/customer/newcustomer';
 import {formatRequiredFieldsMessage} from '../helpers/utils';
+import {onDeliveryFetchSuccess} from '../redux/deliveryReducer';
+import {useCreateSaleMutation} from '../api/customer/createSale';
 
 export const useGetDeliveryData = () => {
-  const {data, error, isLoading, isFetching} = useGetDeliveryDataQuery();
+  const {data, error, isLoading, isFetching, refetch} =
+    useGetDeliveryDataQuery();
   const [createCustomer] = useCreateCustomerMutation();
+  const [createSale] = useCreateSaleMutation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -16,6 +22,7 @@ export const useGetDeliveryData = () => {
       dispatch(updateLoaderState({isLoading: true}));
     }
     if (data) {
+      dispatch(onDeliveryFetchSuccess(data));
       dispatch(updateLoaderState({isLoading: false}));
     }
   }, [data, isFetching, isLoading]);
@@ -39,9 +46,35 @@ export const useGetDeliveryData = () => {
     }
   };
 
+  const callCustomerSaleApi = async saledata => {
+    try {
+      dispatch(updateLoaderState({isLoading: true}));
+      const response = await createSale(saledata);
+      if (response?.data) {
+        return {success: true};
+      } else if (response?.error) {
+        return {
+          success: false,
+          error:
+            response?.error?.data?.errors ??
+            formatRequiredFieldsMessage(response?.error?.data),
+        };
+      }
+    } catch (e) {
+      return {
+        success: false,
+        error: 'Something went wrong please try again',
+      };
+    } finally {
+      dispatch(updateLoaderState({isLoading: false}));
+    }
+  };
+
   return {
-    deliverydata: data?.customers_list,
-    weightsData: data?.product_list,
+    deliverydata: data?.customerinfo,
+    weightsData: data?.productinfo,
     callCreateCustomerApi,
+    callCustomerSaleApi,
+    refetchDeliveryData: () => refetch(),
   };
 };

@@ -1,76 +1,232 @@
 {
-  "product_list": [
+  "customerinfo": [
     {
-      "id": "1",
-      "name": "8kg",
-      "price": 200
+      "id": 2,
+      "business_name": "TEST5",
+      "code": "TestCode",
+      "billing_address": "TestBillingAddress",
+      "delivery_address": "TestDeliveryAddress",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "TestContactPerson",
+      "phone_number": "1234567890",
+      "email": "test@gmail.com",
+      "gst_number": "27CMTPS5661M1ZA",
+      "gst_certificate": null,
+      "product_usages": []
     },
     {
-      "id": "2",
-      "name": "12kg",
-      "price": 500
+      "id": 3,
+      "business_name": "TEST6",
+      "code": "TestCode",
+      "billing_address": "TestBillingAddress",
+      "delivery_address": "TestDeliveryAddress",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "TestContactPerson",
+      "phone_number": "1234567890",
+      "email": "test@gmail.com",
+      "gst_number": "27CMTPS5661M1ZA",
+      "gst_certificate": null,
+      "product_usages": [
+        {
+          "product": 1,
+          "quantity": 10,
+          "discount": "4.00"
+        },
+        {
+          "product": 2,
+          "quantity": 11,
+          "discount": "28.00"
+        }
+      ]
     },
     {
-      "id": "3",
-      "name": "17kg",
-      "price": 800
+      "id": 4,
+      "business_name": "mart d 2",
+      "code": "4213",
+      "billing_address": "test mart 3",
+      "delivery_address": "test mart 3",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "tanmay",
+      "phone_number": "9876432252",
+      "email": "wad@gmail.com",
+      "gst_number": "27CMTPS5661M1ZW",
+      "gst_certificate": null,
+      "product_usages": [
+        {
+          "product": 1,
+          "quantity": 10,
+          "discount": "8.00"
+        },
+        {
+          "product": 2,
+          "quantity": 11,
+          "discount": "56.00"
+        }
+      ]
     },
     {
-      "id": "4",
-      "name": "20kg",
-      "price": 1000
+      "id": 5,
+      "business_name": "TEST8",
+      "code": "TestCode",
+      "billing_address": "TestBillingAddress",
+      "delivery_address": "TestDeliveryAddress",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "TestContactPerson",
+      "phone_number": "1234567890",
+      "email": "test@gmail.com",
+      "gst_number": "27CMTPS5661M1ZA",
+      "gst_certificate": null,
+      "product_usages": [
+        {
+          "product": 1,
+          "quantity": 10,
+          "discount": "8.00"
+        },
+        {
+          "product": 2,
+          "quantity": 11,
+          "discount": "6.00"
+        }
+      ]
     },
     {
-      "id": "5",
-      "name": "33kg",
-      "price": 1200
+      "id": 6,
+      "business_name": "mart d 5",
+      "code": "42133",
+      "billing_address": "test mart 3",
+      "delivery_address": "test mart 3",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "tanmay",
+      "phone_number": "9876432252",
+      "email": "wad@gmail.com",
+      "gst_number": "27CMTPS5661M1ZV",
+      "gst_certificate": null,
+      "product_usages": [
+        {
+          "product": 1,
+          "quantity": 10,
+          "discount": "18.00"
+        },
+        {
+          "product": 3,
+          "quantity": 1,
+          "discount": "1.00"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "business_name": "mart v",
+      "code": "32432",
+      "billing_address": "v mart near highway",
+      "delivery_address": "v mart near road",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "kamlesh",
+      "phone_number": "9842371232",
+      "email": "dw@gmail.com",
+      "gst_number": "27CMTPS5661M1ZQ",
+      "gst_certificate": null,
+      "product_usages": [
+        {
+          "product": 1,
+          "quantity": 5,
+          "discount": "10.00"
+        },
+        {
+          "product": 2,
+          "quantity": 10,
+          "discount": "60.00"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "business_name": "ABC pvt ltd",
+      "code": "12345",
+      "billing_address": "None",
+      "delivery_address": "Test address",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "Rahul",
+      "phone_number": "7503883145",
+      "email": "Rahul@gmail.com",
+      "gst_number": "29RQDAY9875P1Z3",
+      "gst_certificate": null,
+      "product_usages": [
+        {
+          "product": 1,
+          "quantity": 10,
+          "discount": "8.00"
+        },
+        {
+          "product": 3,
+          "quantity": 11,
+          "discount": "16.00"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "business_name": "Customer One",
+      "code": "Cus1",
+      "billing_address": "Mumbai",
+      "delivery_address": "Mumbai",
+      "security_deposit": 0,
+      "pending_payment": 0,
+      "contact_person": "Raj Shekar",
+      "phone_number": "7272040409",
+      "email": "",
+      "gst_number": "27CMTPS5662M1ZZ",
+      "gst_certificate": null,
+      "product_usages": [
+        {
+          "product": 2,
+          "quantity": 10,
+          "discount": "18.00"
+        },
+        {
+          "product": 3,
+          "quantity": 11,
+          "discount": "26.00"
+        }
+      ]
     }
   ],
-  "customers_list": [
+  "productinfo": [
     {
-      "id": "1",
-      "name": "Ganesh",
-      "contact": "987654321",
-      "pendingpayment": 1200,
-      "cylinderHeld": 17,
-      "discount": 14,
-      "securityDeposit": 2600
+      "id": 1,
+      "product": "10Kg",
+      "price": 1000.0
     },
     {
-      "id": "2",
-      "name": "Pratik",
-      "contact": "987654321",
-      "pendingpayment": 1250,
-      "cylinderHeld": 13,
-      "discount": 15,
-      "securityDeposit": 1602
+      "id": 2,
+      "product": "20 Kg",
+      "price": 2000.0
     },
     {
-      "id": "3",
-      "name": "Raj",
-      "contact": "987654321",
-      "pendingpayment": 4200,
-      "cylinderHeld": 10,
-      "discount": 19,
-      "securityDeposit": 1665
+      "id": 3,
+      "product": "Gas pipe",
+      "price": 249.0
+    }
+  ],
+  "locations": [
+    {
+      "name": "Location One",
+      "id": 1
     },
     {
-      "id": "4",
-      "name": "Tapan",
-      "contact": "987654321",
-      "pendingpayment": 5200,
-      "cylinderHeld": 10,
-      "discount": 12,
-      "securityDeposit": 1665
+      "name": "Location Two",
+      "id": 2
     },
     {
-      "id": "5",
-      "name": "Tanmay",
-      "contact": "987654321",
-      "pendingpayment": 7200,
-      "cylinderHeld": 16,
-      "discount": 13,
-      "securityDeposit": 1691
+      "name": "Vehicle One",
+      "id": 4
     }
   ]
 }

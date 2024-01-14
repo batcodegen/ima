@@ -11,7 +11,7 @@ const HomeStack = () => {
   const user = useSelector(state => state.auth.user);
   return (
     <HomeScreenStack.Navigator screenOptions={{headerShown: false}}>
-      {user.role !== 'admin' ? (
+      {user?.role === 'admin' ? (
         <HomeScreenStack.Screen
           name={ROUTES.ADMINSTACK}
           component={AdminStack}

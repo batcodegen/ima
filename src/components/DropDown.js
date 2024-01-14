@@ -8,6 +8,7 @@ const DropDownFile = ({
   valueField,
   onSelect,
   showSearch = true,
+  customStyle,
 }) => {
   const [value, setValue] = useState('');
   const {width} = useWindowDimensions();
@@ -39,7 +40,7 @@ const DropDownFile = ({
 
   return (
     <Dropdown
-      style={styles.dropdown}
+      style={[styles.dropdown, customStyle]}
       placeholderStyle={styles.placeholderStyle}
       selectedTextStyle={styles.selectedTextStyle}
       inputSearchStyle={styles.inputSearchStyle}
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
   dropdown: {
     height: 30,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 12,
     shadowColor: '#000',
     elevation: 2,

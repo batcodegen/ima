@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Text,
   View,
@@ -8,8 +8,11 @@ import {
 } from 'react-native';
 import {useSigninUser} from '../../hooks/useLoginUser';
 import {useSelector} from 'react-redux';
+import BottomAlert from '../../components/BottomAlert';
 
 const LoginScreen = ({navigation}) => {
+  const alertRef = useRef();
+  const error = useSelector(state => state.auth.error);
   const [touchstatus, setTouchStatus] = useState({
     touchedEmail: false,
     touchedPassword: false,
@@ -52,6 +55,12 @@ const LoginScreen = ({navigation}) => {
     touchstatus.touchedEmail,
     touchstatus.touchedPassword,
   ]);
+
+  useEffect(() => {
+    if (error) {
+      alertRef.current.showAlert(error, 'Error');
+    }
+  }, [error]);
 
   const isValidEmail = value => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -126,6 +135,7 @@ const LoginScreen = ({navigation}) => {
         <Text style={styles.loginText}>LOGIN </Text>
       </TouchableOpacity>
       {/* Display error messages */}
+      <BottomAlert ref={alertRef} />
     </View>
   );
 };

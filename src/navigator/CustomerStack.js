@@ -1,23 +1,25 @@
-import React from 'react';
-import {ROUTES} from './routes';
-import Dashboard from '../screens/admin/Dashboard';
 import {
   DrawerContentScrollView,
-  DrawerItemList,
+  DrawerItem,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
+import React from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {onLogout} from '../redux/authReducer';
-import FinanceReport from '../screens/admin/FinanceReport';
-import StockReport from '../screens/admin/StockReport';
-import {CylinderDelivery} from '../screens/customer/CylinderDelivery';
+import {HandoverScreen} from '../screens/customer/HandoverScreen';
+import {ROUTES} from './routes';
+import CylinderDelivery2 from '../screens/customer/CylinderDelivery2';
+import NewCustomer from '../components/NewCustomer';
+import {useNavigation} from '@react-navigation/native';
 
 const CustomerDrawerStack = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   const dispatch = useDispatch();
-  const {first_name, last_name} = useSelector(state => state.auth.user);
+  const {user} = useSelector(state => state.auth);
+  const navigation = useNavigation();
+  const activeRouteName = props.state.routeNames[props.state.index];
 
   return (
     <View style={styles.container}>
@@ -25,10 +27,21 @@ function CustomDrawerContent(props) {
         <View style={styles.drawerHeader}>
           <Text style={styles.welcomestyle}>{'Welcome'}</Text>
           <Text
-            style={styles.customerName}>{`${first_name} ${last_name}`}</Text>
+            style={
+              styles.customerName
+            }>{`${user?.first_name} ${user?.last_name}`}</Text>
         </View>
         <View style={{flex: 1}}>
-          <DrawerItemList {...props} />
+          <DrawerItem
+            label={'Delivery'}
+            focused={activeRouteName === ROUTES.CYLINDERDELIVERY}
+            onPress={() => navigation.navigate(ROUTES.CYLINDERDELIVERY)}
+          />
+          <DrawerItem
+            label={'Handover'}
+            focused={activeRouteName === ROUTES.HANDOVER}
+            onPress={() => navigation.navigate(ROUTES.HANDOVER)}
+          />
         </View>
       </DrawerContentScrollView>
       <View>
@@ -58,14 +71,19 @@ const CustomerStack = () => {
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <CustomerDrawerStack.Screen
         name={ROUTES.CYLINDERDELIVERY}
-        component={CylinderDelivery}
+        component={CylinderDelivery2}
         options={{title: 'Delivery'}}
       />
-      {/* <CustomerDrawerStack.Screen
-        name={ROUTES.STOCKREPORT}
-        component={StockReport}
+      <CustomerDrawerStack.Screen
+        name={'NewCustomer'}
+        component={NewCustomer}
+        options={{headerShown: false}}
+      />
+      <CustomerDrawerStack.Screen
+        name={ROUTES.HANDOVER}
+        component={HandoverScreen}
         options={{title: 'Handover'}}
-      /> */}
+      />
     </CustomerDrawerStack.Navigator>
   );
 };

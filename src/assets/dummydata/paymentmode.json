@@ -1,18 +1,18 @@
 [
   {
     "name": "Cash",
-    "value": "Cash"
+    "value": "C"
   },
   {
     "name": "UPI",
-    "value": "UPI"
+    "value": "U"
   },
   {
     "name": "Online",
-    "value": "Online"
+    "value": "O"
   },
   {
     "name": "Cheque",
-    "value": "Cheque"
+    "value": "CQ"
   }
 ]

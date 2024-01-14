@@ -1,10 +1,12 @@
 const ENDPOINTS = {
-  BASE_URL: 'http://142.93.209.63:8000/api',
-  LOGIN: '/login/',
-  FINANCE: '/financereport',
-  STOCK: '/stockreport',
-  DELIVERY: '/delivery',
+  BASE_URL: 'http://142.93.209.63:8000',
+  LOGIN: '/api/login/',
+  FINANCE: '/api/financereport',
+  STOCK: '/api/stockreport',
+  DELIVERY: '/api/delivery',
   CREATE_CUSTOMER: '/customers/api/',
+  HANDOVER: '/api/handover',
+  CREATE_SALE: '/v1/api/sales/create/',
 };
 
 export default ENDPOINTS;

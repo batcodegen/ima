@@ -2,7 +2,7 @@ import strings from './strings.json';
 
 function formatToLocalRupee(number) {
   if (!number) {
-    return 0;
+    return '₹ 0';
   }
   const locale = 'en-IN';
 

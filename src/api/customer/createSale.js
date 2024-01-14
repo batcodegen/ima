@@ -1,8 +1,8 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import Endpoint from '../endpoints';
 
-export const createCustomerApi = createApi({
-  reducerPath: 'createCustomer',
+export const createSaleApi = createApi({
+  reducerPath: 'createsale',
   baseQuery: fetchBaseQuery({
     baseUrl: Endpoint.BASE_URL, // actual - Endpoint.BASE_URL
     prepareHeaders: (baseHeaders, {getState}) => {
@@ -14,9 +14,9 @@ export const createCustomerApi = createApi({
     },
   }),
   endpoints: builder => ({
-    createCustomer: builder.mutation({
+    createSale: builder.mutation({
       query: payload => ({
-        url: Endpoint.CREATE_CUSTOMER,
+        url: Endpoint.CREATE_SALE,
         method: 'POST',
         body: payload,
       }),
@@ -24,4 +24,4 @@ export const createCustomerApi = createApi({
   }),
 });
 
-export const {useCreateCustomerMutation} = createCustomerApi;
+export const {useCreateSaleMutation} = createSaleApi;

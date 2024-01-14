@@ -12,9 +12,7 @@ export const useSigninUser = () => {
       dispatch(updateLoaderState({isLoading: true}));
       const response = await loginuser({email, password});
       if (response.data) {
-        dispatch(
-          onLogin({token: response.data.token, user: response.data.user}),
-        );
+        dispatch(onLogin(response.data));
       } else if (response.error) {
         dispatch(
           onLoginError({

@@ -22,8 +22,12 @@ import paymentmode from '../../assets/dummydata/paymentmode.json';
 import {useGetDeliveryData} from '../../hooks/useDelivery';
 import NewCustomer from '../../components/NewCustomer';
 import {formatToLocalRupee} from '../../helpers/utils';
+import RefreshButton from '../../components/RefreshButton';
+import BottomAlert from '../../components/BottomAlert';
 
 export function CylinderDelivery({navigation}) {
+  const onP = () => navigation.navigate('CylinderDelivery2');
+  const alertRef = useRef();
   // textinputs
   const [billdata, setBillData] = useState({
     bill: 0,
@@ -48,8 +52,26 @@ export function CylinderDelivery({navigation}) {
   ]);
 
   // apis
-  const {deliverydata, weightsData, callCreateCustomerApi} =
-    useGetDeliveryData();
+  const {
+    deliverydata,
+    weightsData,
+    callCreateCustomerApi,
+    refetchDeliveryData,
+  } = useGetDeliveryData();
+
+  // top header refresh
+  useEffect(() => {
+    navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerRight: props => (
+        <RefreshButton
+          onPress={() => {
+            refetchDeliveryData();
+          }}
+        />
+      ),
+    });
+  }, [navigation]);
 
   useEffect(() => {
     if (weightsData && deliverydata) {
@@ -135,12 +157,18 @@ export function CylinderDelivery({navigation}) {
     //paymenttobecollected + pendingpayemnt (top) - paymentcollected
     return (
       parseFloat(billdata.bill) +
-      1200 -
+      (selectedCustomer?.pendingPayment ?? 0) -
       (paymentcollected ? parseFloat(paymentcollected) : 0)
     );
   };
 
-  const submitdeliverydata = () => {};
+  const submitdeliverydata = () => {
+    if (securitydeposit === '' || paymentcollected === '') {
+      alertRef.current.showAlert('Fields cannot be empty.', 'Error');
+    } else {
+      showAlert('Success', 'Delivery data has been updated!');
+    }
+  };
 
   const HeaderTitleView = useCallback(
     ({style, title}) => (
@@ -170,7 +198,7 @@ export function CylinderDelivery({navigation}) {
 
   const calculateDiscount = useCallback(
     billAmt => {
-      return billAmt * selectedCustomer?.discount;
+      return selectedCustomer?.discount;
     },
     [selectedCustomer],
   );
@@ -189,6 +217,7 @@ export function CylinderDelivery({navigation}) {
           onPress: () => {
             if (shouldCloseModal) {
               parentBottomSheetRef.current.close();
+              refetchDeliveryData();
             }
           },
         },
@@ -212,6 +241,7 @@ export function CylinderDelivery({navigation}) {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={50}>
+      <Text onPress={onP}>nav</Text>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -258,10 +288,6 @@ export function CylinderDelivery({navigation}) {
             </Text>
           </View>
         </View>
-        <TableView
-          title={string.pendingPayment}
-          value={formatToLocalRupee(selectedCustomer?.pendingpayment)}
-        />
         <TableView
           title={string.cylinderHeld}
           value={selectedCustomer?.cylinderHeld}
@@ -383,12 +409,16 @@ export function CylinderDelivery({navigation}) {
           />
           <TableView
             title={string.newsecuritydeposit}
-            // value={String(securitydeposit)}
+            value={String(securitydeposit)}
             ontextupdate={setSecurityDeposit}
           />
           <TableView
+            title={string.pendingPayment}
+            value={formatToLocalRupee(selectedCustomer?.pendingpayment)}
+          />
+          <TableView
             title={string.paymentCollected}
-            // value={String(paymentcollected)}
+            value={String(paymentcollected)}
             ontextupdate={setPaymentCollected}
           />
 
@@ -420,6 +450,7 @@ export function CylinderDelivery({navigation}) {
           <NewCustomer sendData={updateNewCustomerData} />
         </BottomSheetComponent>
       </ScrollView>
+      <BottomAlert ref={alertRef} />
     </KeyboardAvoidingView>
   );
 }

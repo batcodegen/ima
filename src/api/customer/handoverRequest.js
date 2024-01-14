@@ -1,10 +1,10 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import Endpoint from '../endpoints';
 
-export const createCustomerApi = createApi({
-  reducerPath: 'createCustomer',
+export const handoverRequestApi = createApi({
+  reducerPath: 'delivery',
   baseQuery: fetchBaseQuery({
-    baseUrl: Endpoint.BASE_URL, // actual - Endpoint.BASE_URL
+    baseUrl: Endpoint.BASE_URL,
     prepareHeaders: (baseHeaders, {getState}) => {
       const token = getState().auth.token;
       if (token) {
@@ -14,14 +14,10 @@ export const createCustomerApi = createApi({
     },
   }),
   endpoints: builder => ({
-    createCustomer: builder.mutation({
-      query: payload => ({
-        url: Endpoint.CREATE_CUSTOMER,
-        method: 'POST',
-        body: payload,
-      }),
+    getHandoverData: builder.query({
+      query: () => Endpoint.DELIVERY,
     }),
   }),
 });
 
-export const {useCreateCustomerMutation} = createCustomerApi;
+export const {useGetDeliveryDataQuery} = handoverRequestApi;

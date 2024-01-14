@@ -9,9 +9,9 @@ import {
   SectionList,
 } from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import BottomSheetComponent from '../common/BottomSheetComponent';
 import {ScrollView} from 'react-native-gesture-handler';
-import HandOverRequest from '../common/HandOverRequest';
+import BottomSheetComponent from '../../components/BottomSheetComponent';
+import HandOverRequest from './HandOverRequest';
 
 // from
 // request created section -> 1 button (cancel)

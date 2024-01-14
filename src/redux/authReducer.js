@@ -5,6 +5,7 @@ const initialState = {
   isLoggedIn: false,
   user: null,
   error: null,
+  extras: null,
 };
 
 const authSlice = createSlice({
@@ -12,9 +13,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     onLogin(state, action) {
-      state.token = action.payload.token;
+      const {token, user, ...restdata} = action.payload;
+      state.token = token;
       state.isLoggedIn = true;
-      state.user = action.payload.user;
+      state.extras = restdata;
+      state.user = user;
       state.error = null;
     },
     onLoginError(state, action) {

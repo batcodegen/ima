@@ -16,7 +16,7 @@ const AdminDrawerStack = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   const dispatch = useDispatch();
-  const {first_name, last_name} = useSelector(state => state.auth.user);
+  const {user} = useSelector(state => state.auth);
 
   return (
     <View style={styles.container}>
@@ -24,7 +24,9 @@ function CustomDrawerContent(props) {
         <View style={styles.drawerHeader}>
           <Text style={styles.welcomestyle}>{'Welcome'}</Text>
           <Text
-            style={styles.customerName}>{`${first_name} ${last_name}`}</Text>
+            style={
+              styles.customerName
+            }>{`${user?.first_name} ${user?.last_name}`}</Text>
         </View>
         <View style={{flex: 1}}>
           <DrawerItemList {...props} />

@@ -1,11 +1,11 @@
 {
-  "token": "f85f4412dfba3e7386cc5ba69bc280f9af63faed",
+  "token": "8cded90f6914298eaa9766a3a84074f2f77cc1a1",
   "user": {
     "id": 1,
     "email": "h.sottany@gmail.com",
     "first_name": "Hardik",
     "last_name": "Sottany",
-    "role": "admin",
+    "role": "delivery",
     "salary": 0
   }
 }

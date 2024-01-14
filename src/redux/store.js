@@ -8,6 +8,7 @@ import {financeApi} from '../api/admin/finance';
 import {stockReportApi} from '../api/admin/stock';
 import {deliveryApi} from '../api/admin/delivery';
 import {createCustomerApi} from '../api/customer/newcustomer';
+import {createSaleApi} from '../api/customer/createSale';
 
 function configureAppStore() {
   const store = configureStore({
@@ -19,12 +20,13 @@ function configureAppStore() {
         .concat(financeApi.middleware)
         .concat(stockReportApi.middleware)
         .concat(deliveryApi.middleware)
-        .concat(createCustomerApi.middleware),
+        .concat(createCustomerApi.middleware)
+        .concat(createSaleApi.middleware),
     enhancers: getDefaultEnhancers =>
       getDefaultEnhancers(monitorReducerEnhancer),
   });
 
-  if (process.env.NODE_ENV !== 'production' && module.hot) {
+  if (module.hot) {
     module.hot.accept('./reducers', () => store.replaceReducer(rootReducer));
   }
 

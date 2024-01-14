@@ -6,9 +6,11 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import string from '../helpers/strings.json';
-import DropDownFile from '../common/DropDown';
-import {useGetApi} from '../services/useApi';
+import string from '../../helpers/strings.json';
+// import {useGetApi} from '../services/useApi';
+import customerData from '../../assets/dummydata/customer.json';
+import categories from '../../assets/dummydata/containerweight.json';
+import DropDownFile from '../../components/DropDown';
 
 const HandOverRequest = () => {
   const [quantity, setQuantity] = useState('');
@@ -16,8 +18,8 @@ const HandOverRequest = () => {
   const [SelectedType, setSelectedType] = useState('');
 
   const addRequestToList = () => {};
-  const {data: customerData, error, isLoading} = useGetApi('/customers');
-  const {data: categories, error1, isLoading1} = useGetApi('/weights');
+  // const {data: customerData, error, isLoading} = useGetApi('/customers');
+  // const {data: categories, error1, isLoading1} = useGetApi('/weights');
   const types = [{name: 'Empty'}, {name: 'Filled'}];
 
   return (
@@ -103,7 +105,6 @@ const styles = StyleSheet.create({
   titleText: {flex: 0.5, color: 'black', textAlign: 'center'},
   textinput: {
     // flex: 1,
-    marginStart: 10,
     borderRadius: 10,
     backgroundColor: 'ghostwhite',
     color: 'black',
@@ -126,7 +127,11 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   button: {flex: 1, justifyContent: 'flex-end'},
-  dataContainer: {flexDirection: 'row', marginBottom: 5, alignItems: 'center'},
+  dataContainer: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    alignItems: 'center',
+  },
   titleContainer: {
     flex: 1,
     alignItems: 'center',

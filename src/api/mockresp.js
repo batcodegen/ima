@@ -2,7 +2,9 @@ import {createServer} from 'miragejs';
 import ENDPOINTS from './endpoints';
 import financereport from '../assets/dummydata/financereport.json';
 import stockreport from '../assets/dummydata/stockreport.json';
-import deliverydata from '../assets/dummydata/deliverydata.json';
+// import deliverydata from '../assets/dummydata/deliverydata.json';
+import handoverdata from '../assets/dummydata/handover.json';
+// import loginre from '../assets/dummydata/login.json';
 
 if (window.server) {
   window.server.shutdown();
@@ -18,12 +20,18 @@ window.server = createServer({
       return stockreport;
     });
 
+    this.get(`${ENDPOINTS.BASE_URL}${ENDPOINTS.HANDOVER}`, () => {
+      return handoverdata;
+    });
+
     // this.get(`${ENDPOINTS.BASE_URL}${ENDPOINTS.DELIVERY}`, () => {
     //   return deliverydata;
     // });
     this.passthrough(
+      `${ENDPOINTS.BASE_URL}${ENDPOINTS.LOGIN}`,
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.DELIVERY}`,
-      'http://142.93.209.63:8000/customers/api/',
+      `${ENDPOINTS.BASE_URL}${ENDPOINTS.CREATE_CUSTOMER}`,
+      `${ENDPOINTS.BASE_URL}${ENDPOINTS.CREATE_SALE}`,
     );
   },
 });
