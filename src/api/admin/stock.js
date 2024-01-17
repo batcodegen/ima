@@ -15,7 +15,7 @@ export const stockReportApi = createApi({
   }),
   endpoints: builder => ({
     getStockReport: builder.query({
-      query: () => Endpoint.STOCK,
+      query: () => Endpoint.ADMIN_STOCK_DASHBOARD,
     }),
   }),
 });

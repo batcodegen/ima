@@ -17,5 +17,5 @@ export const useStockReport = () => {
     }
   }, [data, isFetching, isLoading]);
 
-  return {data};
+  return {summaryreport: data?.summaryreport, locationreport: data?.locations};
 };

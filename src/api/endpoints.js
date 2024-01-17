@@ -7,6 +7,7 @@ const ENDPOINTS = {
   CREATE_CUSTOMER: '/customers/api/',
   HANDOVER: '/api/handover',
   CREATE_SALE: '/v1/api/sales/create/',
+  ADMIN_STOCK_DASHBOARD: '/api/dashboard/',
 };
 
 export default ENDPOINTS;

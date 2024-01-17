@@ -1,7 +1,233 @@
 {
-  "totalrevenue": 1233220,
-  "totalpurchase": 3221,
-  "totalsalary": 431113,
-  "totalexpenses": 10000,
-  "profit": 789234
+  "today": {
+    "sales": {
+      "sale": "40000",
+      "purchase": "20000",
+      "securitydeposit": "80000",
+      "profit": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "cash": "12344",
+        "upi": "3231",
+        "online": "4234",
+        "check": "1234"
+      }
+    },
+    "purchases": {
+      "purchase": "40000",
+      "purchasepayment": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "received": "5000",
+        "pending": "3231"
+      }
+    },
+    "expenses": {
+      "vehicleexpenses": "4221",
+      "salaries": "76548",
+      "otherexpenses": "5223",
+      "paymentcollected": {
+        "cash": "5500",
+        "bank": "5000"
+      }
+    }
+  },
+  "thisweek": {
+    "sales": {
+      "sale": "40000",
+      "purchase": "20000",
+      "securitydeposit": "80000",
+      "profit": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "cash": "12344",
+        "upi": "3231",
+        "online": "4234",
+        "check": "1234"
+      }
+    },
+    "purchases": {
+      "purchase": "40000",
+      "purchasepayment": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "received": "5000",
+        "pending": "3231"
+      }
+    },
+    "expenses": {
+      "vehicleexpenses": "4221",
+      "salaries": "76548",
+      "otherexpenses": "5223",
+      "paymentcollected": {
+        "cash": "5500",
+        "bank": "5000"
+      }
+    }
+  },
+  "previousweek": {
+    "sales": {
+      "sale": "40000",
+      "purchase": "20000",
+      "securitydeposit": "80000",
+      "profit": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "cash": "12344",
+        "upi": "3231",
+        "online": "4234",
+        "check": "1234"
+      }
+    },
+    "purchases": {
+      "purchase": "40000",
+      "purchasepayment": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "received": "5000",
+        "pending": "3231"
+      }
+    },
+    "expenses": {
+      "vehicleexpenses": "4221",
+      "salaries": "76548",
+      "otherexpenses": "5223",
+      "paymentcollected": {
+        "cash": "5500",
+        "bank": "5000"
+      }
+    }
+  },
+  "thismonth": {
+    "sales": {
+      "sale": "40000",
+      "purchase": "20000",
+      "securitydeposit": "80000",
+      "profit": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "cash": "12344",
+        "upi": "3231",
+        "online": "4234",
+        "check": "1234"
+      }
+    },
+    "purchases": {
+      "purchase": "40000",
+      "purchasepayment": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "received": "5000",
+        "pending": "3231"
+      }
+    },
+    "expenses": {
+      "vehicleexpenses": "4221",
+      "salaries": "76548",
+      "otherexpenses": "5223",
+      "paymentcollected": {
+        "cash": "5500",
+        "bank": "5000"
+      }
+    }
+  },
+  "previousmonth": {
+    "sales": {
+      "sale": "40000",
+      "purchase": "20000",
+      "securitydeposit": "80000",
+      "profit": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "cash": "12344",
+        "upi": "3231",
+        "online": "4234",
+        "check": "1234"
+      }
+    },
+    "purchases": {
+      "purchase": "40000",
+      "purchasepayment": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "received": "5000",
+        "pending": "3231"
+      }
+    },
+    "expenses": {
+      "vehicleexpenses": "4221",
+      "salaries": "76548",
+      "otherexpenses": "5223",
+      "paymentcollected": {
+        "cash": "5500",
+        "bank": "5000"
+      }
+    }
+  },
+  "thisyear": {
+    "sales": {
+      "sale": "40000",
+      "purchase": "20000",
+      "securitydeposit": "80000",
+      "profit": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "cash": "12344",
+        "upi": "3231",
+        "online": "4234",
+        "check": "1234"
+      }
+    },
+    "purchases": {
+      "purchase": "40000",
+      "purchasepayment": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "received": "5000",
+        "pending": "3231"
+      }
+    },
+    "expenses": {
+      "vehicleexpenses": "4221",
+      "salaries": "76548",
+      "otherexpenses": "5223",
+      "paymentcollected": {
+        "cash": "5500",
+        "bank": "5000"
+      }
+    }
+  },
+  "previousyear": {
+    "sales": {
+      "sale": "40000",
+      "purchase": "20000",
+      "securitydeposit": "80000",
+      "profit": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "cash": "12344",
+        "upi": "3231",
+        "online": "4234",
+        "check": "1234"
+      }
+    },
+    "purchases": {
+      "purchase": "40000",
+      "purchasepayment": "20000",
+      "pendingpayment": "20000",
+      "paymentcollected": {
+        "received": "5000",
+        "pending": "3231"
+      }
+    },
+    "expenses": {
+      "vehicleexpenses": "4221",
+      "salaries": "76548",
+      "otherexpenses": "5223",
+      "paymentcollected": {
+        "cash": "5500",
+        "bank": "5000"
+      }
+    }
+  }
 }

@@ -197,7 +197,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
     const finalPaymentToCollect =
       finalBillAmt +
       parseFloat(depositCollected) +
-      (selectedUserData.pending_payment ?? 0);
+      (selectedUserData?.pending_payment ?? 0);
     setPaymentToBeCollected(finalPaymentToCollect);
     calculateBalanceAmount(finalPaymentToCollect, paymentcollected);
   };

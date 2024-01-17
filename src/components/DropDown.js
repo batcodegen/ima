@@ -19,6 +19,7 @@ const DropDownFile = ({
   }, [data]);
 
   const renderItem = item => {
+    console.log('--teim--', item);
     return (
       <View style={styles.item}>
         <Text style={styles.textItem}>{item[labelField]}</Text>

@@ -4,13 +4,17 @@ import {useStockReport} from '../../hooks/useStockReport';
 import DropDownFile from '../../components/DropDown';
 
 const StockReport = () => {
-  const {data} = useStockReport();
+  const {summaryreport, locationreport} = useStockReport();
   const [selectedItem, setSelectedItem] = useState({});
   useEffect(() => {
-    if (data) {
-      setSelectedItem(data?.locationreport[0]);
+    if (locationreport) {
+      setSelectedItem(locationreport[0]);
     }
-  }, [data]);
+  }, [locationreport]);
+
+  const filterLocations = locReport => {
+    return locReport?.filter(obj => typeof obj.location === 'string') ?? [];
+  };
 
   const renderItemSummary = ({item, index}) => (
     <View style={[styles.cardfilled, styles.shadow]} key={index}>
@@ -68,7 +72,7 @@ const StockReport = () => {
         showsVerticalScrollIndicator={false}>
         <Text style={styles.totalsummary}>Total summary</Text>
         <FlatList
-          data={data?.summaryreport ?? []}
+          data={summaryreport ?? []}
           renderItem={renderItemSummary}
           keyExtractor={(_, i) => i.toString()}
           numColumns={2}
@@ -80,12 +84,12 @@ const StockReport = () => {
           </View>
           <View style={styles.valueContainer}>
             <DropDownFile
-              data={data?.locationreport}
+              data={filterLocations(locationreport)}
               labelField={'location'}
               valueField={'location'}
               showSearch={false}
               onSelect={item => {
-                const selectedOptn = data?.locationreport?.filter(
+                const selectedOptn = locationreport?.filter(
                   i => item === i.location,
                 );
                 setSelectedItem(selectedOptn[0]);

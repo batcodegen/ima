@@ -7,6 +7,7 @@ const AppTheme = {
     background: '#FFFFFF',
     placeholder: '#F1F1F1',
     text: '#000000',
+    border: '#CCCCCC',
   },
 };
 
