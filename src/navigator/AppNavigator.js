@@ -15,7 +15,13 @@ const AppNavigator = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const isLoading = useSelector(state => state.appLoader.isLoading);
   return (
-    <NavigationContainer theme={AppTheme} onReady={() => RNBootSplash.hide()}>
+    <NavigationContainer
+      theme={AppTheme}
+      onReady={() =>
+        setTimeout(() => {
+          RNBootSplash.hide();
+        }, 1500)
+      }>
       <>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           {isLoggedIn ? (

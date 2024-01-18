@@ -20,9 +20,9 @@ window.server = createServer({
     //   return stockreport;
     // });
 
-    this.get(`${ENDPOINTS.BASE_URL}${ENDPOINTS.HANDOVER}`, () => {
-      return handoverdata;
-    });
+    // this.get(`${ENDPOINTS.BASE_URL}${ENDPOINTS.HANDOVER}`, () => {
+    //   return handoverdata;
+    // });
 
     // this.get(`${ENDPOINTS.BASE_URL}${ENDPOINTS.DELIVERY}`, () => {
     //   return deliverydata;
@@ -33,6 +33,9 @@ window.server = createServer({
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.CREATE_CUSTOMER}`,
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.CREATE_SALE}`,
       `${ENDPOINTS.BASE_URL}${ENDPOINTS.ADMIN_STOCK_DASHBOARD}`,
+      `${ENDPOINTS.BASE_URL}${ENDPOINTS.GET_HANDOVER_LIST}`,
+      `${ENDPOINTS.BASE_URL}${ENDPOINTS.UPDATE_HANDOVER_LIST}/**`,
+      `${ENDPOINTS.BASE_URL}${ENDPOINTS.UPDATE_HANDOVER_LIST}/`,
     );
   },
 });

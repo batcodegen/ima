@@ -5,7 +5,8 @@ const ENDPOINTS = {
   STOCK: '/api/stockreport',
   DELIVERY: '/api/delivery',
   CREATE_CUSTOMER: '/customers/api/',
-  HANDOVER: '/api/handover',
+  GET_HANDOVER_LIST: '/products/api/list/',
+  UPDATE_HANDOVER_LIST: '/products/api',
   CREATE_SALE: '/v1/api/sales/create/',
   ADMIN_STOCK_DASHBOARD: '/api/dashboard/',
 };

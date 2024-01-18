@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import strings from './strings.json';
 
 function formatToLocalRupee(number) {
@@ -36,4 +37,19 @@ function formatRequiredFieldsMessage(response) {
   return requiredFields.join('\n');
 }
 
-export {formatToLocalRupee, formatRequiredFieldsMessage};
+function showConfirmAlert(title, message, handleAffermative) {
+  Alert.alert(
+    title,
+    message,
+    [
+      {
+        text: 'OK',
+        onPress: handleAffermative,
+      },
+      {text: 'CANCEL', onPress: () => {}},
+    ],
+    {cancelable: false},
+  );
+}
+
+export {formatToLocalRupee, formatRequiredFieldsMessage, showConfirmAlert};

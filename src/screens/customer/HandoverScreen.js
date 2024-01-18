@@ -12,12 +12,20 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import {ScrollView} from 'react-native-gesture-handler';
 import BottomSheetComponent from '../../components/BottomSheetComponent';
 import HandOverRequest from './HandOverRequest';
+import {useHandover} from '../../hooks/useHandover';
+import {showConfirmAlert} from '../../helpers/utils';
+import BottomAlert from '../../components/BottomAlert';
 
-// from
-// request created section -> 1 button (cancel)
-// request recevied section -> 2 button (accept, reject)
-// only pending request to be shown
-// refresh button to be shown on header
+const getType = type => {
+  switch (type) {
+    case 'F':
+      return 'Filled';
+    case 'E':
+      return 'Empty';
+    default:
+      return 'Empty';
+  }
+};
 
 const Item = ({
   item,
@@ -26,58 +34,93 @@ const Item = ({
   textColor,
   isOfCreateRequest,
   isLastItem,
+  onAcceptRequest,
+  onRejectRequest,
 }) => (
   <TouchableOpacity
     onPress={onPress}
     style={[styles.item, {backgroundColor, marginBottom: isLastItem ? 10 : 0}]}>
     <View style={styles.textContainer}>
-      <Text style={[styles.title, {color: textColor}]}>{item.driver}</Text>
+      <Text
+        style={[
+          styles.title,
+          {color: textColor},
+        ]}>{`Source : ${item.source_name}`}</Text>
+      <Text
+        style={[
+          styles.title,
+          {color: textColor},
+        ]}>{`Destination : ${item.destination_name}`}</Text>
       <Text style={[styles.subTitle, {color: textColor}]}>
-        {item.product} {item.type} : {item.quantity}
+        {item.product_name} {getType(item.cylinder_status)} : {item.quantity}
       </Text>
     </View>
     <View style={styles.buttonContainer}>
       {isOfCreateRequest ? null : (
         <Pressable
-          style={styles.plusContainer}
+          style={styles.acceptContainer}
           onPress={() => {
-            onAcceptRequest();
+            onAcceptRequest(item);
           }}>
-          <Ionicon
-            name={'checkmark-circle-outline'}
-            size={35}
-            color={'green'}
-          />
+          <Text style={styles.acceptText}>{'Accept'}</Text>
         </Pressable>
       )}
       <Pressable
-        style={styles.plusContainer}
+        style={styles.rejectContainer}
         onPress={() => {
-          onAcceptRequest();
+          onRejectRequest(item);
         }}>
-        <Ionicon name={'close-circle-outline'} size={35} color={'#FF3333'} />
+        <Text style={styles.acceptText}>
+          {isOfCreateRequest ? 'Cancel' : 'Reject'}
+        </Text>
       </Pressable>
     </View>
   </TouchableOpacity>
 );
-const onAcceptRequest = async () => {};
 
 export function HandoverScreen({navigation}) {
+  const alertRef1 = useRef(null);
+  const {data, refetch, updateRequest, createHandoverRequest} = useHandover();
   const [selectedId, setSelectedId] = useState();
   const parentBottomSheetRef = useRef(null);
-
   React.useEffect(() => {
     navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: props => (
-        <TouchableOpacity activeOpacity={0.5} style={{marginHorizontal: 10}}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.headerRight}
+          onPress={refetch}>
           <Ionicon name={'refresh'} size={25} color={'black'} />
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
 
+  const onRejectRequest = async item => {
+    await updateRequest({id: item.id, status: 'rejected'});
+  };
+  const onAcceptRequest = async item => {
+    await updateRequest({id: item.id, status: 'approved'});
+  };
+
+  const submitApi = async apidata => {
+    const {success, error} = await createHandoverRequest(apidata);
+    if (success) {
+      alertRef1.current.showAlert(
+        'Request created successfully.',
+        'Success',
+        'success',
+      );
+      parentBottomSheetRef.current.close();
+      refetch();
+    } else if (error) {
+      alertRef1.current.showAlert(error, 'Error');
+    }
+  };
+
   const renderItem = ({item}) => {
-    const backgroundColor = item.id === selectedId ? '#6495ED' : 'white';
+    const backgroundColor = item.id === selectedId ? '#6495ED' : '#f5f5f5';
     const color = item.id === selectedId ? 'white' : 'black';
     const isLastItem = isLastItemInCreatedRequest(item);
     return (
@@ -88,6 +131,18 @@ export function HandoverScreen({navigation}) {
           backgroundColor={backgroundColor}
           textColor={color}
           isLastItem={isLastItem}
+          onRejectRequest={() =>
+            showConfirmAlert(
+              'Remove',
+              'Cancel/Reject the selected request?',
+              () => onRejectRequest(item),
+            )
+          }
+          onAcceptRequest={() =>
+            showConfirmAlert('Approve', 'Approve the selected request?', () =>
+              onAcceptRequest(item),
+            )
+          }
           isOfCreateRequest={doesDriverExistInCreatedRequests(item.id)}
         />
       </ScrollView>
@@ -95,13 +150,13 @@ export function HandoverScreen({navigation}) {
   };
 
   function isLastItemInCreatedRequest(item) {
-    const createdRequest = respdata.createdrequest || [];
+    const createdRequest = data?.createdrequest || [];
     return createdRequest[createdRequest.length - 1] === item;
   }
 
   const doesDriverExistInCreatedRequests = driverId => {
-    if (respdata && respdata.createdrequest) {
-      return respdata.createdrequest.some(request => request.id === driverId);
+    if (data && data.createdrequest) {
+      return data.createdrequest.some(request => request.id === driverId);
     }
     return false;
   };
@@ -114,8 +169,8 @@ export function HandoverScreen({navigation}) {
     <SafeAreaView style={styles.container}>
       <SectionList
         sections={[
-          {title: 'Created request', data: respdata.createdrequest},
-          {title: 'Received request', data: respdata.receivedrequest},
+          {title: 'Created request', data: data?.createdrequest ?? []},
+          {title: 'Received request', data: data?.receivedrequest ?? []},
         ]}
         renderItem={renderItem}
         renderSectionHeader={({section}) => (
@@ -132,19 +187,38 @@ export function HandoverScreen({navigation}) {
         <Text style={styles.handoverText}>HandOver </Text>
       </TouchableOpacity>
       <BottomSheetComponent ref={parentBottomSheetRef}>
-        <HandOverRequest />
+        <HandOverRequest callApi={submitApi} />
       </BottomSheetComponent>
+      <BottomAlert ref={alertRef1} />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  headerRight: {marginHorizontal: 10},
+  rejectContainer: {
+    backgroundColor: '#FF3333',
+    padding: 5,
+    borderRadius: 5,
+    width: 60,
+    alignItems: 'center',
+  },
+  acceptText: {color: 'white'},
+  acceptContainer: {
+    backgroundColor: 'green',
+    padding: 5,
+    borderRadius: 5,
+    width: 60,
+    alignItems: 'center',
+    marginBottom: 5,
+  },
   container: {
     flex: 1,
   },
   titlewrap: {
+    marginTop: 5,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'lightgrey',
   },
   taskTitle: {fontWeight: 'bold', fontSize: 16, color: 'black'},
   item: {
@@ -179,50 +253,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+    justifyContent: 'space-around',
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
   },
 });
-
-const respdata = {
-  createdrequest: [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      driver: 'Alex', // driver
-      type: 'empty',
-      product: '12kg', // product
-      quantity: '2',
-      status: 'pending', // TBD: specific request to be shown
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      driver: 'Second',
-      type: 'Filled',
-      product: '17kg',
-      quantity: '5',
-      status: 'rejected',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      driver: 'Third',
-      type: 'empty',
-      product: '21kg',
-      quantity: '2',
-      status: 'pending',
-    },
-  ],
-  receivedrequest: [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bs',
-      driver: 'Alex', // driver
-      type: 'empty',
-      product: '12kg', // product
-      quantity: '2',
-      status: 'pending', // TBD: specific request to be shown
-    },
-  ],
-};

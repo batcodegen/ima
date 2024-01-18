@@ -9,6 +9,7 @@ import {stockReportApi} from '../api/admin/stock';
 import {deliveryApi} from '../api/admin/delivery';
 import {createCustomerApi} from '../api/customer/newcustomer';
 import {createSaleApi} from '../api/customer/createSale';
+import {handoverRequestApi} from '../api/customer/handoverRequest';
 
 function configureAppStore() {
   const store = configureStore({
@@ -21,7 +22,8 @@ function configureAppStore() {
         .concat(stockReportApi.middleware)
         .concat(deliveryApi.middleware)
         .concat(createCustomerApi.middleware)
-        .concat(createSaleApi.middleware),
+        .concat(createSaleApi.middleware)
+        .concat(handoverRequestApi.middleware),
     enhancers: getDefaultEnhancers =>
       getDefaultEnhancers(monitorReducerEnhancer),
   });

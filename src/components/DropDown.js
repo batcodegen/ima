@@ -19,7 +19,6 @@ const DropDownFile = ({
   }, [data]);
 
   const renderItem = item => {
-    console.log('--teim--', item);
     return (
       <View style={styles.item}>
         <Text style={styles.textItem}>{item[labelField]}</Text>
@@ -61,6 +60,7 @@ const DropDownFile = ({
         setValue(item[labelField]);
         onSelect(item);
       }}
+      selectedTextProps={{numberOfLines: 1, ellipsizeMode: 'middle'}}
       containerStyle={{borderRadius: 10, width: width * 0.7}}
       itemContainerStyle={{borderRadius: 10}}
       // renderLeftIcon={() => (

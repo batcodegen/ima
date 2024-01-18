@@ -10,6 +10,7 @@ import {deliveryApi} from '../api/admin/delivery';
 import {createCustomerApi} from '../api/customer/newcustomer';
 import deliveryReducer from './deliveryReducer';
 import {createSaleApi} from '../api/customer/createSale';
+import {handoverRequestApi} from '../api/customer/handoverRequest';
 
 const persistConfig = {
   key: 'root',
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   [deliveryApi.reducerPath]: deliveryApi.reducer,
   [createCustomerApi.reducerPath]: createCustomerApi.reducer,
   [createSaleApi.reducerPath]: createSaleApi.reducer,
+  [handoverRequestApi.reducerPath]: handoverRequestApi.reducer,
 });
 
 export default rootReducer;

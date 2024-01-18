@@ -5,48 +5,78 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import string from '../../helpers/strings.json';
-// import {useGetApi} from '../services/useApi';
-import customerData from '../../assets/dummydata/customer.json';
-import categories from '../../assets/dummydata/containerweight.json';
 import DropDownFile from '../../components/DropDown';
+import {useSelector} from 'react-redux';
+import BottomAlert from '../../components/BottomAlert';
+import {useHandover} from '../../hooks/useHandover';
 
-const HandOverRequest = () => {
+const types = [
+  {name: 'Filled', id: 'F'},
+  {name: 'Empty', id: 'E'},
+];
+
+const HandOverRequest = ({callApi}) => {
+  const alertRef = useRef(null);
   const [quantity, setQuantity] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [SelectedType, setSelectedType] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [SelectedType, setSelectedType] = useState(types[0]);
+  const {productinfo, locations} = useSelector(state => state.deliverydata);
+  const {extras} = useSelector(state => state.auth);
+  const {createHandoverRequest} = useHandover();
+  useEffect(() => {
+    if (locations) {
+      setSelectedLocation(locations[0]);
+    }
+    if (productinfo) {
+      setSelectedCategory(productinfo[0]);
+    }
+  }, [locations, productinfo]);
 
-  const addRequestToList = () => {};
-  // const {data: customerData, error, isLoading} = useGetApi('/customers');
-  // const {data: categories, error1, isLoading1} = useGetApi('/weights');
-  const types = [{name: 'Empty'}, {name: 'Filled'}];
+  const addRequestToList = async () => {
+    if (!quantity) {
+      alertRef.current.showAlert('Please add quantity.', 'Error');
+    } else {
+      //call api
+      const apidata = {
+        status: 'pending',
+        cylinder_status: SelectedType?.id,
+        product: selectedCategory?.id,
+        quantity: quantity,
+        destination: selectedLocation?.id,
+        source: extras?.source_id,
+      };
+      callApi(apidata);
+    }
+  };
 
   return (
     <View style={styles.contentContainer}>
       <Text style={styles.title}>Create new request</Text>
       <View style={styles.dataContainer}>
         <View style={styles.titleContainer}>
-          <Text style={{color: 'black'}}>{string.customerName}</Text>
+          <Text style={{color: 'black'}}>{'Location/Vehicle'}</Text>
         </View>
         <View style={styles.valueContainer}>
           <DropDownFile
-            data={customerData}
+            data={locations}
             labelField={'name'}
             valueField={'name'}
-            onSelect={item => console.log(item)}
+            onSelect={item => setSelectedLocation(item)}
           />
         </View>
       </View>
       <View style={styles.dataContainer}>
         <View style={styles.titleContainer}>
-          <Text style={{color: 'black'}}>{string.category}</Text>
+          <Text style={{color: 'black'}}>{'Product'}</Text>
         </View>
         <View style={styles.valueContainer}>
           <DropDownFile
-            data={categories}
-            labelField={'value'}
-            valueField={'value'}
+            data={productinfo}
+            labelField={'product'}
+            valueField={'product'}
             showSearch={false}
             onSelect={item => {
               setSelectedCategory(item);
@@ -87,6 +117,7 @@ const HandOverRequest = () => {
           <Text style={styles.loginText}>Create Request </Text>
         </TouchableOpacity>
       </View>
+      <BottomAlert ref={alertRef} />
     </View>
   );
 };
@@ -94,7 +125,11 @@ const HandOverRequest = () => {
 export default HandOverRequest;
 
 const styles = StyleSheet.create({
-  contentContainer: {flex: 1, padding: 20},
+  contentContainer: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'space-between',
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -126,7 +161,7 @@ const styles = StyleSheet.create({
   loginText: {
     color: 'white',
   },
-  button: {flex: 1, justifyContent: 'flex-end'},
+  button: {justifyContent: 'flex-end'},
   dataContainer: {
     flexDirection: 'row',
     marginVertical: 10,
