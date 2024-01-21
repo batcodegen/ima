@@ -96,7 +96,7 @@ export function HandoverScreen({navigation}) {
       ),
     });
   }, [navigation]);
-
+  console.log('--data--', data);
   const onRejectRequest = async item => {
     await updateRequest({id: item.id, status: 'rejected'});
   };

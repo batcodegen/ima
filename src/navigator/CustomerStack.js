@@ -12,6 +12,7 @@ import {ROUTES} from './routes';
 import CylinderDelivery2 from '../screens/customer/CylinderDelivery2';
 import NewCustomer from '../components/NewCustomer';
 import {useNavigation} from '@react-navigation/native';
+import {handoverRequestApi} from '../api/customer/handoverRequest';
 
 const CustomerDrawerStack = createDrawerNavigator();
 
@@ -51,6 +52,7 @@ function CustomDrawerContent(props) {
             props.navigation.closeDrawer();
             try {
               //Logout logic
+              dispatch(handoverRequestApi.util.resetApiState());
               dispatch(onLogout());
             } catch (e) {
               console.log(e);

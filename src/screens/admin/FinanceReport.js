@@ -9,20 +9,19 @@ import CustomDatePicker from '../../components/CustomDatePicker';
 import dayjs from 'dayjs';
 
 const FinanceReport = () => {
+  const todaydate = dayjs(new Date()).format('YYYY-MM-DD');
   const {colors} = useTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState(null);
-  const [showCustomerDate, setShowCustomDate] = useState(false);
-  const [toDate, setToDate] = useState(dayjs(new Date()).format('DD-MM-YYYY'));
-  const [fromDate, setFromDate] = useState(
-    dayjs(new Date()).format('DD-MM-YYYY'),
-  );
+  const [showCustomDate, setShowCustomDate] = useState(false);
+  const [toDate, setToDate] = useState(todaydate);
+  const [fromDate, setFromDate] = useState(todaydate);
   const [title, setTitle] = useState('Today');
-  const {data} = useFinanceReport();
+  const {data, fetchData} = useFinanceReport();
 
   useEffect(() => {
     if (data) {
-      setSelectedFilter(data.today);
+      setSelectedFilter(data);
     }
   }, [data]);
 
@@ -31,10 +30,17 @@ const FinanceReport = () => {
   };
 
   const onItemSelect = item => {
-    setShowCustomDate(item.id === 'customdate');
+    const isCustomDate = item.id === 'customdate';
+    setShowCustomDate(isCustomDate);
     setTitle(item.name);
-    setSelectedFilter(data[item.id]);
     toggleVisibility();
+    if (!isCustomDate) {
+      fetchData({date_range: item.id});
+    }
+  };
+
+  const onCustomDateCall = () => {
+    fetchData({start_date: fromDate, end_date: toDate});
   };
 
   const Header = useCallback(
@@ -79,25 +85,24 @@ const FinanceReport = () => {
   const TitleContainer = useCallback(() => {
     return (
       <>
-        {showCustomerDate ? (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginHorizontal: 10,
-              justifyContent: 'space-between',
-              marginTop: 5,
-            }}>
-            <CustomDatePicker title={'From'} onDateChange={setFromDate} />
-            <Text style={{color: colors.text, marginHorizontal: 5}}>-</Text>
-            <CustomDatePicker title={'To'} onDateChange={setToDate} />
-            <Pressable
-              style={{
-                padding: 10,
-                backgroundColor: 'lightblue',
-                marginHorizontal: 10,
-                borderRadius: 5,
-              }}>
+        {showCustomDate ? (
+          <View style={styles.dateContainer}>
+            <CustomDatePicker
+              title={'From'}
+              pickedDate={new Date(fromDate)}
+              onDateChange={picked => {
+                setFromDate(prevDate => picked);
+              }}
+            />
+            <Text style={[styles.separatorText, {color: colors.text}]}>-</Text>
+            <CustomDatePicker
+              title={'To'}
+              pickedDate={new Date(toDate)}
+              onDateChange={picked => {
+                setToDate(prevDate => picked);
+              }}
+            />
+            <Pressable style={styles.icon} onPress={onCustomDateCall}>
               <FontAwesome
                 name={'search'}
                 size={20}
@@ -110,7 +115,7 @@ const FinanceReport = () => {
         )}
       </>
     );
-  }, [showCustomerDate]);
+  }, [showCustomDate, title, toDate, fromDate]);
 
   return (
     <View style={styles.topcontainer}>
@@ -186,8 +191,8 @@ const FinanceReport = () => {
             titleText1={'Received'}
             titleText2={'Pending'}
             hasNext
-            val1={selectedFilter?.purchases?.paymentcollected?.received}
-            val2={selectedFilter?.purchases?.paymentcollected?.pending}
+            val1={selectedFilter?.purchases?.freight?.received}
+            val2={selectedFilter?.purchases?.freight?.pending}
           />
         </View>
 
@@ -236,6 +241,19 @@ const FinanceReport = () => {
 export default FinanceReport;
 
 const styles = StyleSheet.create({
+  icon: {
+    padding: 10,
+    backgroundColor: 'lightblue',
+    marginStart: 10,
+    borderRadius: 5,
+  },
+  separatorText: {marginHorizontal: 5},
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginTop: 5,
+  },
   bottomContText: {textAlign: 'center', marginBottom: 10, fontWeight: 'bold'},
   bottomContainer: {
     borderWidth: 1,

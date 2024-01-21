@@ -15,9 +15,13 @@ export const financeApi = createApi({
   }),
   endpoints: builder => ({
     getFinanceReport: builder.query({
-      query: () => Endpoint.FINANCE,
+      query: params => ({
+        url: Endpoint.FINANCE,
+        params: params,
+      }),
     }),
   }),
 });
 
-export const {useGetFinanceReportQuery} = financeApi;
+export const {useGetFinanceReportQuery, useLazyGetFinanceReportQuery} =
+  financeApi;

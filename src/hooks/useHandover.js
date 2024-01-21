@@ -1,4 +1,4 @@
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {updateLoaderState} from '../redux/loaderReducer';
 import translation from '../helpers/strings.json';
 import {useEffect} from 'react';
@@ -14,17 +14,20 @@ export const useHandover = () => {
     useGetHandoverDataQuery();
   const [updateRequestStatus] = useUpdateRequestStatusMutation();
   const [createNewRequest] = useCreateNewRequestMutation();
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isFetching || isLoading) {
-      dispatch(updateLoaderState({isLoading: true}));
+    if (isLoggedIn) {
+      if (isFetching || isLoading) {
+        dispatch(updateLoaderState({isLoading: true}));
+      }
+      if (data) {
+        dispatch(updateLoaderState({isLoading: false}));
+      }
     }
-    if (data) {
-      dispatch(updateLoaderState({isLoading: false}));
-    }
-  }, [data, isFetching, isLoading]);
+  }, [data, isFetching, isLoading, isLoggedIn]);
 
   const updateRequest = async ({id, status}) => {
     try {

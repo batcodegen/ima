@@ -5,7 +5,7 @@ import AppNavigator from './src/navigator/AppNavigator';
 import {Provider} from 'react-redux';
 import {peristor, store} from './src/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import './src/api/mockresp';
+// import './src/api/mockresp';
 
 function App(): React.JSX.Element {
   return (

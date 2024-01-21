@@ -14,6 +14,7 @@ const Stack = createStackNavigator();
 const AppNavigator = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const isLoading = useSelector(state => state.appLoader.isLoading);
+  console.log('isLoading', isLoading);
   return (
     <NavigationContainer
       theme={AppTheme}

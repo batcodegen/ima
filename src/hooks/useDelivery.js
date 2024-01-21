@@ -1,4 +1,4 @@
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {updateLoaderState} from '../redux/loaderReducer';
 import {useEffect} from 'react';
 import {
@@ -16,14 +16,17 @@ export const useGetDeliveryData = () => {
   const [createCustomer] = useCreateCustomerMutation();
   const [createSale] = useCreateSaleMutation();
   const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
   useEffect(() => {
-    if (isFetching || isLoading) {
-      dispatch(updateLoaderState({isLoading: true}));
-    }
-    if (data) {
-      dispatch(onDeliveryFetchSuccess(data));
-      dispatch(updateLoaderState({isLoading: false}));
+    if (isLoggedIn) {
+      if (isFetching || isLoading) {
+        dispatch(updateLoaderState({isLoading: true}));
+      }
+      if (data) {
+        dispatch(onDeliveryFetchSuccess(data));
+        dispatch(updateLoaderState({isLoading: false}));
+      }
     }
   }, [data, isFetching, isLoading]);
 

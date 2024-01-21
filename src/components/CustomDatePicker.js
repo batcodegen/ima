@@ -4,14 +4,14 @@ import DatePicker from 'react-native-date-picker';
 import dayjs from 'dayjs';
 import {useTheme} from '@react-navigation/native';
 
-const CustomDatePicker = ({onDateChange, title}) => {
+const CustomDatePicker = ({onDateChange, title, pickedDate}) => {
   const {colors} = useTheme();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(pickedDate);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
   const handleDateChange = date => {
     setSelectedDate(date);
-    const formattedDate = dayjs(date).format('DD-MM-YYYY');
+    const formattedDate = dayjs(date).format('YYYY-MM-DD');
     onDateChange(formattedDate);
   };
 
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   leftSection: {
     backgroundColor: 'lightblue',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     justifyContent: 'center',
   },
   rightSection: {

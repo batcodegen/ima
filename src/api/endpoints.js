@@ -1,7 +1,7 @@
 const ENDPOINTS = {
   BASE_URL: 'http://142.93.209.63:8000',
   LOGIN: '/api/login/',
-  FINANCE: '/api/financereport',
+  FINANCE: '/finance/api/dashboard/',
   STOCK: '/api/stockreport',
   DELIVERY: '/api/delivery',
   CREATE_CUSTOMER: '/customers/api/',

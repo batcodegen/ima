@@ -1,36 +1,88 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ROUTES} from '../../navigator/routes';
+import {useFinanceReport} from '../../hooks/useAdminDashboard';
+import FinanceChart from '../../components/FinanceChart';
+import {useStockReport} from '../../hooks/useStockReport';
+import {useTheme} from '@react-navigation/native';
+import StockChart from '../../components/StockChart';
+import RefreshButton from '../../components/RefreshButton';
 
 const Dashboard = ({navigation}) => {
+  const {colors} = useTheme();
+  const {data: financeData, refetch: refetchFinance} = useFinanceReport();
+  const {cumulativeData, refetch: refetchStock} = useStockReport();
+
+  const [initialFinanceData, setInitialFinanceData] = useState(null);
+
+  useEffect(() => {
+    navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerRight: props => (
+        <RefreshButton
+          onPress={() => {
+            refetchFinance();
+            refetchStock();
+          }}
+        />
+      ),
+    });
+  }, [navigation]);
+
+  useEffect(() => {
+    if (financeData) {
+      setInitialFinanceData(prevState => ({...financeData}));
+    }
+  }, [financeData]);
+
   const navigateTo = screenName => {
     navigation.navigate(screenName);
   };
+
+  const HeaderView = useCallback(({leftTitle, navigatePath}) => {
+    return (
+      <View style={styles.titleContainer}>
+        <Text style={[styles.leftText, {color: colors.text}]}>{leftTitle}</Text>
+        <Pressable onPress={() => navigateTo(navigatePath)}>
+          <Text style={[styles.rightText, {color: colors.text}]}>
+            {'View Details >'}
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.card1}
-        activeOpacity={0.6}
-        onPress={() => navigateTo(ROUTES.STOCKREPORT)}>
-        <Text style={styles.text}>{'Stock Report'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.card2}
-        activeOpacity={0.6}
-        onPress={() => navigateTo(ROUTES.FINANCEREPORT)}>
-        <Text style={styles.text}>{'Finance Report'}</Text>
-      </TouchableOpacity>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <HeaderView
+        leftTitle={'Stock Report'}
+        navigatePath={ROUTES.STOCKREPORT}
+      />
+      {cumulativeData && <StockChart data={cumulativeData} />}
+      <HeaderView
+        leftTitle={'Finance Report'}
+        navigatePath={ROUTES.FINANCEREPORT}
+      />
+      {initialFinanceData && <FinanceChart data={initialFinanceData} />}
+    </ScrollView>
   );
 };
 
 export default Dashboard;
 
 const styles = StyleSheet.create({
+  rightText: {fontSize: 12, fontWeight: 'bold'},
+  leftText: {fontSize: 14, fontWeight: 'bold'},
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    backgroundColor: 'gainsboro',
+  },
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
   },
   text: {fontWeight: 'bold', fontSize: 20, color: 'black'},

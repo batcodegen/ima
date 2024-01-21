@@ -1,23 +1,16 @@
 import {useTheme} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native';
+import React from 'react';
+import {Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+
 const filterdata = [
   {id: 'today', name: 'Today'},
-  {id: 'thisweek', name: 'This Week'},
-  {id: 'thismonth', name: 'This Month'},
-  {id: 'thisyear', name: 'This Year'},
-  {id: 'previousweek', name: 'Previous Week'},
-  {id: 'previousmonth', name: 'Previous Month'},
-  {id: 'previousyear', name: 'Previous Year'},
+  {id: 'yesterday', name: 'Yesterday'},
+  {id: 'week', name: 'This Week'},
+  {id: 'month', name: 'This Month'},
+  {id: 'year', name: 'This Year'},
   {id: 'customdate', name: 'Custom Date'},
 ];
+
 const Filter = ({isVisible, toggleModalState, onItemSelect}) => {
   const {colors} = useTheme();
   return (
