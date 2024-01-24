@@ -56,6 +56,12 @@ export const useGetDeliveryData = () => {
       if (response?.data) {
         return {success: true};
       } else if (response?.error) {
+        if (response.error.originalStatus === 500) {
+          return {
+            success: false,
+            error: `${response.error.originalStatus} : ${response.error.status}`,
+          };
+        }
         return {
           success: false,
           error:

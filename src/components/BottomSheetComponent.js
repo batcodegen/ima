@@ -12,7 +12,7 @@ import {BackHandler} from 'react-native';
 const BottomSheetComponent = forwardRef((props, ref) => {
   const bottomSheetRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const snapPoints = useMemo(() => ['60%'], []);
+  const snapPoints = useMemo(() => ['60%', '80%'], []);
 
   useImperativeHandle(ref, () => ({
     focus: () => {
@@ -58,6 +58,8 @@ const BottomSheetComponent = forwardRef((props, ref) => {
       enablePanDownToClose
       ref={bottomSheetRef}
       index={-1}
+      // enableDynamicSizing={true}
+      enableOverDrag
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       backdropComponent={renderBackdrop}>

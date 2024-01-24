@@ -17,6 +17,7 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
 
   useEffect(() => {
     if (data) {
+      setQuantity('1');
       setSelectedWeight(data?.[0]);
       setRate(data?.[0]?.price);
       setDiscount(data?.[0]?.discount ?? 0);

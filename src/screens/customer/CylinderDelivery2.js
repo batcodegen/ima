@@ -89,37 +89,41 @@ const CylinderDelivery2 = ({navigation, route}) => {
     }
   }, [customerinfo]);
 
+  const handleInitData = useCallback(() => {
+    let productData = [];
+    if (selectedUserData?.product_usages?.length > 0) {
+      productData = selectedUserData.product_usages?.map(usage => {
+        const product = productinfo.find(prod => prod.id === usage.product);
+        return {...usage, ...product};
+      });
+    } else {
+      productData = [...productinfo];
+    }
+    if (productData?.length > 0) {
+      const initData = [
+        {
+          id: 1,
+          quantity: '1',
+          weight: productData?.[0],
+          rate: productData?.[0]?.price ?? 0,
+          calculatedDisc: productData?.[0]?.discount ?? 0,
+        },
+      ];
+      cylinderQtyFromProdUsage(productData);
+      setProductList(prevState => [...productData]);
+      setItems(prevState => [...initData]);
+      setCollectItems(prevDate => [{...initData[0], quantity: '0'}]);
+      calculateBillAmountAndDiscount(initData);
+    }
+  }, [productinfo, selectedUserData, calculateBillAmountAndDiscount]);
+
   // when customerinfo is saved, create:
   // productlist, default values, bills, etc.
   useEffect(() => {
     if (selectedUserData) {
-      let productData = [];
-      if (selectedUserData?.product_usages?.length > 0) {
-        productData = selectedUserData.product_usages?.map(usage => {
-          const product = productinfo.find(prod => prod.id === usage.product);
-          return {...usage, ...product};
-        });
-      } else {
-        productData = [...productinfo];
-      }
-      if (productData?.length > 0) {
-        const initData = [
-          {
-            id: 1,
-            quantity: '1',
-            weight: productData?.[0],
-            rate: productData?.[0]?.price ?? 0,
-            calculatedDisc: productData?.[0]?.discount ?? 0,
-          },
-        ];
-        cylinderQtyFromProdUsage(productData);
-        setProductList(productData);
-        setItems(initData);
-        setCollectItems([{...initData[0], quantity: '0'}]);
-        calculateBillAmountAndDiscount(initData);
-      }
+      handleInitData();
     }
-  }, [selectedUserData, productinfo]);
+  }, [selectedUserData, handleInitData]);
 
   const handleViewModalPress = () => parentBottomSheetRef.current.focus();
   const handlePresentModalPress = () => {
@@ -174,33 +178,39 @@ const CylinderDelivery2 = ({navigation, route}) => {
 
   //   console.log('deliverydata', selectedUserData);
 
-  const calculateBillAmountAndDiscount = data => {
-    const totalBill = data
-      .filter(item => item.quantity)
-      .reduce((accumulator, item) => {
-        const quantity = parseInt(item.quantity, 10);
-        const price = item.rate || item.weight.price * quantity;
-        return accumulator + price;
-      }, 0);
-    const totalDiscount = data.reduce(
-      (acc, item) => acc + parseFloat(item.calculatedDisc),
-      0.0,
-    );
-    const finalBillAmt = totalBill - totalDiscount;
-    setTotalBillValue(totalBill);
-    setTotalDiscountValue(totalDiscount);
-    setFinalBillAmount(finalBillAmt);
-    calculatePaymentToBeCollected(finalBillAmt, securitydeposit);
-  };
+  const calculateBillAmountAndDiscount = useCallback(
+    data => {
+      const totalBill = data
+        .filter(item => item.quantity)
+        .reduce((accumulator, item) => {
+          const quantity = parseInt(item.quantity, 10);
+          const price = item.rate || item.weight.price * quantity;
+          return accumulator + price;
+        }, 0);
+      const totalDiscount = data.reduce(
+        (acc, item) => acc + parseFloat(item.calculatedDisc),
+        0.0,
+      );
+      const finalBillAmt = totalBill - totalDiscount;
+      setTotalBillValue(totalBill);
+      setTotalDiscountValue(totalDiscount);
+      setFinalBillAmount(finalBillAmt);
+      calculatePaymentToBeCollected(finalBillAmt, securitydeposit);
+    },
+    [securitydeposit, calculatePaymentToBeCollected],
+  );
 
-  const calculatePaymentToBeCollected = (finalBillAmt, depositCollected) => {
-    const finalPaymentToCollect =
-      finalBillAmt +
-      parseFloat(depositCollected) +
-      (selectedUserData?.pending_payment ?? 0);
-    setPaymentToBeCollected(finalPaymentToCollect);
-    calculateBalanceAmount(finalPaymentToCollect, paymentcollected);
-  };
+  const calculatePaymentToBeCollected = useCallback(
+    (finalBillAmt, depositCollected) => {
+      const finalPaymentToCollect =
+        finalBillAmt +
+        parseFloat(depositCollected) +
+        (selectedUserData?.pending_payment ?? 0);
+      setPaymentToBeCollected(finalPaymentToCollect);
+      calculateBalanceAmount(finalPaymentToCollect, paymentcollected);
+    },
+    [paymentcollected, selectedUserData?.pending_payment],
+  );
 
   const calculateBalanceAmount = (toBeCollectedAmt, collectedAmt) => {
     setBalanceAmount(toBeCollectedAmt - collectedAmt);
@@ -237,6 +247,14 @@ const CylinderDelivery2 = ({navigation, route}) => {
           onPress: () => {
             if (shouldCloseModal) {
               refetchDeliveryData();
+              setTimeout(() => {
+                setSelectedUserData(customerinfo[0]);
+                setSecurityDeposit(0);
+                setPaymentCollected(0);
+                setRemarks('');
+                setImageData(null);
+                handleInitData();
+              }, 1000);
             }
           },
         },
@@ -276,7 +294,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
           payment_screenshot: imageData?.base64 ?? '',
         },
       };
-      console.log('api0-', apidata);
+      // console.log('dat--', JSON.stringify(apidata));
       const {success, error} = await callCustomerSaleApi(apidata);
       if (success) {
         showAlert('Success', 'Sale created successfully', true);
@@ -487,7 +505,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
           />
           <TableView
             title={string.pendingPayment}
-            value={formatToLocalRupee(selectedUserData?.pendingpayment)}
+            value={formatToLocalRupee(selectedUserData?.pending_payment)}
           />
           <TableView
             title={string.paymentToBeCollected}

@@ -36,7 +36,7 @@ const ViewCustomerData = ({data}) => {
         />
         <TableView
           title={'Contact person'}
-          value={data?.contact_person}
+          value={data?.contact_person ?? '-'}
           viewableText
         />
         <TableView
