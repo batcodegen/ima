@@ -37,7 +37,7 @@ const ProductTable = ({onRemove, index, updateData, itemsLength, data}) => {
   const calculateRateAndDiscount = (weight, quantityText, discountText) => {
     const selectedObject = data.find(item => item.product === weight.product);
     updateData(index, {
-      quantity: quantityText,
+      quantity: Number(quantityText),
       product: selectedObject.id,
       discount: discountText,
     });
@@ -167,7 +167,7 @@ const NewCustomer = ({navigation}) => {
     setItems(updatedItems);
   };
 
-  const showAlert = (title, msg, shouldCloseModal) => {
+  const showAlert = (title, msg, shouldCloseModal, customerInfo) => {
     Alert.alert(
       title,
       msg,
@@ -181,6 +181,7 @@ const NewCustomer = ({navigation}) => {
                   screen: ROUTES.CYLINDERDELIVERY,
                   params: {
                     shouldRefetch: true,
+                    createdCustomerInfo: customerInfo,
                   },
                 }),
               );
@@ -194,9 +195,11 @@ const NewCustomer = ({navigation}) => {
 
   // handles new customer creation
   const updateNewCustomerData = async custData => {
-    const {success, error} = await callCreateCustomerApi(custData);
+    const {success, error, customerInfo} = await callCreateCustomerApi(
+      custData,
+    );
     if (success) {
-      showAlert('Success', 'Customer created successfully', true);
+      showAlert('Success', 'Customer created successfully', true, customerInfo);
     } else {
       showAlert('Error', error, false);
     }
@@ -215,7 +218,7 @@ const NewCustomer = ({navigation}) => {
     ) {
       alertRef.current.showAlert('All fields are required.', 'Error');
     } else {
-      updateNewCustomerData({
+      const custCreateData = {
         business_name: name,
         billing_address: billingAddress,
         email,
@@ -226,9 +229,11 @@ const NewCustomer = ({navigation}) => {
         phone_number: phonenum,
         product_usages: items,
         gst_certificate: selectPdfFile,
-        security_deposit: securityDeposit,
-        pending_payment: pendingPayment,
-      });
+        security_deposit: Number(securityDeposit),
+        pending_payment: Number(pendingPayment),
+      };
+      // console.log('sent data--', custCreateData);
+      updateNewCustomerData(custCreateData);
     }
   };
 

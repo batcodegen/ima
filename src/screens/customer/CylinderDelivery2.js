@@ -68,6 +68,20 @@ const CylinderDelivery2 = ({navigation, route}) => {
     }
   }, [route.params]);
 
+  // Usage:
+  // when new customer is created the user should be populated
+  useEffect(() => {
+    if (
+      route?.params?.shouldRefetch &&
+      customerinfo?.length > 0 &&
+      route?.params?.createdCustomerInfo
+    ) {
+      const userInfo = route?.params?.createdCustomerInfo;
+      const findCustomer = customerinfo?.find(cust => cust.id === userInfo.id);
+      setSelectedUserData(findCustomer);
+    }
+  }, [route.params, customerinfo]);
+
   // top header refresh
   useEffect(() => {
     navigation.setOptions({
@@ -83,11 +97,11 @@ const CylinderDelivery2 = ({navigation, route}) => {
   }, [navigation]);
 
   // save first value as default from customerinfo
-  useEffect(() => {
-    if (customerinfo?.length > 0) {
-      setSelectedUserData(customerinfo[0]);
-    }
-  }, [customerinfo]);
+  // useEffect(() => {
+  //   if (customerinfo?.length > 0) {
+  //     setSelectedUserData(customerinfo[0]);
+  //   }
+  // }, [customerinfo]);
 
   const handleInitData = useCallback(() => {
     let productData = [];
@@ -103,10 +117,10 @@ const CylinderDelivery2 = ({navigation, route}) => {
       const initData = [
         {
           id: 1,
-          quantity: '1',
-          weight: productData?.[0],
-          rate: productData?.[0]?.price ?? 0,
-          calculatedDisc: productData?.[0]?.discount ?? 0,
+          quantity: '0',
+          weight: 0,
+          rate: 0,
+          calculatedDisc: 0,
         },
       ];
       cylinderQtyFromProdUsage(productData);
@@ -294,7 +308,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
           payment_screenshot: imageData?.base64 ?? '',
         },
       };
-      // console.log('dat--', JSON.stringify(apidata));
+      console.log('dat--', JSON.stringify(apidata));
       const {success, error} = await callCustomerSaleApi(apidata);
       if (success) {
         showAlert('Success', 'Sale created successfully', true);
@@ -334,12 +348,14 @@ const CylinderDelivery2 = ({navigation, route}) => {
                 color={'dodgerblue'}
               />
             </Pressable>
-            <Pressable
-              onPress={() => {
-                handleViewModalPress();
-              }}>
-              <Ionicon name={'eye'} size={20} color={'dodgerblue'} />
-            </Pressable>
+            {selectedUserData && (
+              <Pressable
+                onPress={() => {
+                  handleViewModalPress();
+                }}>
+                <Ionicon name={'eye'} size={20} color={'dodgerblue'} />
+              </Pressable>
+            )}
           </View>
           <View style={styles.valueContainer}>
             <DropDownFile
@@ -349,6 +365,10 @@ const CylinderDelivery2 = ({navigation, route}) => {
               onSelect={item => {
                 setSelectedUserData(item);
               }}
+              showDefault={false}
+              createdCustomer={
+                route?.params?.createdCustomerInfo ? selectedUserData : null
+              }
             />
           </View>
         </View>
@@ -385,13 +405,15 @@ const CylinderDelivery2 = ({navigation, route}) => {
               <Text style={[styles.title, {color: colors.text}]}>
                 {string.delivered}
               </Text>
-              <Pressable style={styles.plusContainer} onPress={handleAdd}>
-                <Ionicon
-                  name={'add-circle-outline'}
-                  size={20}
-                  color={'dodgerblue'}
-                />
-              </Pressable>
+              {selectedUserData && (
+                <Pressable style={styles.plusContainer} onPress={handleAdd}>
+                  <Ionicon
+                    name={'add-circle-outline'}
+                    size={20}
+                    color={'dodgerblue'}
+                  />
+                </Pressable>
+              )}
             </View>
             <View style={styles.titleContainer1}>
               <HeaderTitleView
@@ -437,15 +459,17 @@ const CylinderDelivery2 = ({navigation, route}) => {
               <Text style={{fontWeight: 'bold', color: 'black'}}>
                 {'Collected'}
               </Text>
-              <Pressable
-                style={styles.plusContainer}
-                onPress={handleAddCollect}>
-                <Ionicon
-                  name={'add-circle-outline'}
-                  size={20}
-                  color={'dodgerblue'}
-                />
-              </Pressable>
+              {selectedUserData && (
+                <Pressable
+                  style={styles.plusContainer}
+                  onPress={handleAddCollect}>
+                  <Ionicon
+                    name={'add-circle-outline'}
+                    size={20}
+                    color={'dodgerblue'}
+                  />
+                </Pressable>
+              )}
             </View>
             <View style={styles.collectTableContainer}>
               <View style={styles.bottomCollectView}>
@@ -580,7 +604,13 @@ const CylinderDelivery2 = ({navigation, route}) => {
         </View>
 
         {/* button */}
-        <TouchableOpacity onPress={submitdeliverydata} style={styles.loginBtn}>
+        <TouchableOpacity
+          onPress={submitdeliverydata}
+          style={[
+            styles.loginBtn,
+            {backgroundColor: selectedUserData ? '#6495ED' : 'lightgray'},
+          ]}
+          disabled={!selectedUserData}>
           <Text style={styles.loginText}>Submit</Text>
         </TouchableOpacity>
         <BottomSheetComponent ref={parentBottomSheetRef}>
@@ -658,7 +688,6 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '80%',
-    backgroundColor: '#6495ED',
     borderRadius: 25,
     height: 40,
     alignItems: 'center',

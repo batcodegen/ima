@@ -9,14 +9,19 @@ const DropDownFile = ({
   onSelect,
   showSearch = true,
   customStyle,
+  showDefault = true, // should show first value from array or not
+  createdCustomer,
 }) => {
   const [value, setValue] = useState('');
   const {width} = useWindowDimensions();
   useEffect(() => {
-    if (data) {
+    if (data && showDefault) {
       setValue(data?.[0]?.[labelField]);
     }
-  }, [data]);
+    if (createdCustomer) {
+      setValue(createdCustomer?.[labelField]);
+    }
+  }, [data, showDefault, createdCustomer]);
 
   const renderItem = item => {
     return (

@@ -35,7 +35,7 @@ export const useGetDeliveryData = () => {
       dispatch(updateLoaderState({isLoading: true}));
       const response = await createCustomer(custData);
       if (response?.data) {
-        return {success: true};
+        return {success: true, customerInfo: response.data};
       } else if (response?.error) {
         return {
           success: false,
@@ -59,7 +59,11 @@ export const useGetDeliveryData = () => {
         if (response.error.originalStatus === 500) {
           return {
             success: false,
-            error: `${response.error.originalStatus} : ${response.error.status}`,
+            error: `${response.error.originalStatus} : ${
+              typeof response.error.status === 'string'
+                ? response.error.status
+                : formatRequiredFieldsMessage(response.error.status)
+            }`,
           };
         }
         return {

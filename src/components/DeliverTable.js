@@ -9,15 +9,23 @@ import React, {useEffect, useState} from 'react';
 import DropDownFile from './DropDown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
+/**
+ *
+ * @param {data} = selected customer's product info
+ * @param {itemsLength} = for showing space in column view
+ * @param {onRemove} = when '-' is clicked
+ * @param {updateData} = callback funtion to send value
+ * @returns object containing quantity, weight, rate, discount
+ */
 const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
-  const [quantity, setQuantity] = useState('1');
+  const [quantity, setQuantity] = useState('0');
   const [selectedWeight, setSelectedWeight] = useState('');
   const [rate, setRate] = useState(0);
   const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     if (data) {
-      setQuantity('1');
+      setQuantity('0');
       setSelectedWeight(data?.[0]);
       setRate(data?.[0]?.price);
       setDiscount(data?.[0]?.discount ?? 0);
@@ -27,15 +35,15 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
   const calculateRateAndDiscount = (weight, quantityText) => {
     const selectedObject = data.find(item => item.product === weight.product);
     const rates = quantityText
-      ? selectedObject.price * parseFloat(quantityText)
+      ? (selectedObject?.price ?? 0) * parseFloat(quantityText)
       : 0;
     const discountPrice = quantityText
       ? parseFloat(quantityText) * parseFloat(weight?.discount ?? 0)
       : 0;
-    setRate(selectedObject.price);
+    setRate(selectedObject?.price ?? 0);
     setDiscount(weight?.discount ?? 0);
     updateData(index, {
-      quantity: quantityText,
+      quantity: Number(quantityText),
       weight: weight,
       rate: rates,
       calculatedDisc: discountPrice,

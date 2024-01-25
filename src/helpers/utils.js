@@ -29,10 +29,9 @@ function formatRequiredFieldsMessage(response) {
   if (!response) {
     return strings.somethingwentwrong;
   }
-
   const requiredFields = Object.entries(response)
     .filter(([, messages]) => messages.length > 0)
-    .map(([field, messages]) => `${field} - ${messages[0]}`);
+    .map(([field, messages]) => `${field} - ${JSON.stringify(messages[0])}`);
 
   return requiredFields.join('\n');
 }

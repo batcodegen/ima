@@ -15,12 +15,13 @@ const CollectTable = ({onRemove, index, updateData, itemsLength, data}) => {
 
   useEffect(() => {
     if (data) {
+      setQuantity('0');
       setSelectedWeight(data?.[0]);
     }
   }, [data]);
 
   const calculateRate = (weight, quantityText) => {
-    updateData(index, {quantity: quantityText, weight: weight});
+    updateData(index, {quantity: Number(quantityText), weight: weight});
   };
 
   return (
