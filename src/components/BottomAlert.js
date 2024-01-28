@@ -30,6 +30,11 @@ const BottomAlert = forwardRef((props, ref) => {
     <DropdownAlert
       alert={func => (alert.current = func)}
       alertPosition="bottom"
+      onDismissAutomatic={() => {
+        if (props.onAlertDismiss) {
+          props.onAlertDismiss();
+        }
+      }}
     />
   );
 });

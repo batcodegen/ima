@@ -14,6 +14,8 @@ export const handoverRequestApi = createApi({
       return baseHeaders;
     },
   }),
+  refetchOnFocus: true,
+  refetchOnMountOrArgChange: true,
   endpoints: builder => ({
     getHandoverData: builder.query({
       query: () => Endpoint.GET_HANDOVER_LIST,

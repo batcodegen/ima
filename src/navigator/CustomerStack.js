@@ -68,7 +68,12 @@ const CustomerStack = () => {
   return (
     <CustomerDrawerStack.Navigator
       drawerType="front"
-      screenOptions={{headerShown: true, headerTitleAlign: 'center'}}
+      screenOptions={{
+        headerShown: true,
+        headerTitleAlign: 'center',
+        lazy: true,
+        unmountOnBlur: true,
+      }}
       initialRouteName={ROUTES.CYLINDERDELIVERY}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <CustomerDrawerStack.Screen

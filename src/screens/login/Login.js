@@ -23,7 +23,7 @@ const LoginScreen = ({navigation}) => {
     userData: {fname: '', lastName: ''},
   });
   const [errors, setErrors] = useState({});
-  const {signInUser} = useSigninUser();
+  const {signInUser, resetErrorState} = useSigninUser();
 
   useEffect(() => {
     const errorObj = {};
@@ -135,7 +135,12 @@ const LoginScreen = ({navigation}) => {
         <Text style={styles.loginText}>LOGIN </Text>
       </TouchableOpacity>
       {/* Display error messages */}
-      <BottomAlert ref={alertRef} />
+      <BottomAlert
+        ref={alertRef}
+        onAlertDismiss={() => {
+          resetErrorState();
+        }}
+      />
     </View>
   );
 };

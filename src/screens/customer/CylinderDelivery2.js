@@ -446,6 +446,10 @@ const CylinderDelivery2 = ({navigation, route}) => {
                   itemsLength={items.length}
                   updateData={handleUpdate}
                   onRemove={handleRemove}
+                  userProducts={selectedUserData?.product_usages ?? []}
+                  showQuantityError={msg => {
+                    alertRef?.current?.showAlert(msg, 'Error');
+                  }}
                 />
               </View>
             ))}

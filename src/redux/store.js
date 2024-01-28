@@ -10,6 +10,7 @@ import {deliveryApi} from '../api/admin/delivery';
 import {createCustomerApi} from '../api/customer/newcustomer';
 import {createSaleApi} from '../api/customer/createSale';
 import {handoverRequestApi} from '../api/customer/handoverRequest';
+import {setupListeners} from '@reduxjs/toolkit/query';
 
 function configureAppStore() {
   const store = configureStore({
@@ -31,6 +32,8 @@ function configureAppStore() {
   if (module.hot) {
     module.hot.accept('./reducers', () => store.replaceReducer(rootReducer));
   }
+
+  setupListeners(store.dispatch);
 
   return store;
 }

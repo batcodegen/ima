@@ -17,7 +17,15 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
  * @param {updateData} = callback funtion to send value
  * @returns object containing quantity, weight, rate, discount
  */
-const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
+const DeliverTable = ({
+  onRemove,
+  index,
+  updateData,
+  itemsLength,
+  data,
+  userProducts,
+  showQuantityError,
+}) => {
   const [quantity, setQuantity] = useState('0');
   const [selectedWeight, setSelectedWeight] = useState('');
   const [rate, setRate] = useState(0);
@@ -50,6 +58,25 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
     });
   };
 
+  const checkForMaxQuantity = quantityText => {
+    const matchingProduct = userProducts.find(
+      product => product.product === selectedWeight.id,
+    );
+    console.log(userProducts, selectedWeight);
+    const filteredQuantity = matchingProduct ? matchingProduct.quantity : null;
+    if (filteredQuantity && filteredQuantity < quantityText) {
+      if (showQuantityError) {
+        setTimeout(() => {
+          showQuantityError(
+            `Quantity cannot be greater than ${filteredQuantity} for ${selectedWeight?.product}`,
+          );
+        }, 600);
+      }
+      return String(filteredQuantity);
+    }
+    return quantityText;
+  };
+
   if (!data) {
     return null;
   }
@@ -77,8 +104,9 @@ const DeliverTable = ({onRemove, index, updateData, itemsLength, data}) => {
             keyboardType={'numeric'}
             onChangeText={text => {
               const sanitizedText = text.replace(/[^0-9]/g, '');
-              setQuantity(sanitizedText);
-              calculateRateAndDiscount(selectedWeight, sanitizedText);
+              const newQuantity = checkForMaxQuantity(sanitizedText);
+              calculateRateAndDiscount(selectedWeight, newQuantity);
+              setQuantity(newQuantity);
             }}
           />
         </View>

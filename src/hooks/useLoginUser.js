@@ -1,7 +1,7 @@
 import {useDispatch} from 'react-redux';
 import {useLoginUserMutation} from '../api/login';
 import {updateLoaderState} from '../redux/loaderReducer';
-import {onLogin, onLoginError} from '../redux/authReducer';
+import {onLogin, onLoginError, onLogout} from '../redux/authReducer';
 import translation from '../helpers/strings.json';
 
 export const useSigninUser = () => {
@@ -28,5 +28,9 @@ export const useSigninUser = () => {
     }
   };
 
-  return {signInUser};
+  const resetErrorState = () => {
+    dispatch(onLogout());
+  };
+
+  return {signInUser, resetErrorState};
 };

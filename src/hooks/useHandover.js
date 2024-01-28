@@ -64,5 +64,17 @@ export const useHandover = () => {
     }
   };
 
-  return {data, refetch, updateRequest, createHandoverRequest};
+  const refetchHandover = () => {
+    try {
+      dispatch(updateLoaderState({isLoading: true}));
+
+      refetch();
+    } catch (e) {
+      formatRequiredFieldsMessage(e);
+    } finally {
+      dispatch(updateLoaderState({isLoading: false}));
+    }
+  };
+
+  return {data, refetch: refetchHandover, updateRequest, createHandoverRequest};
 };
