@@ -33,6 +33,8 @@ const StockReport = ({navigation}) => {
   //   return locReport?.filter(obj => typeof obj.location === 'string') ?? [];
   // };
 
+  const isTypeCustomer = selectedItem?.location === 'Customers' ?? false;
+
   const renderItemSummary = ({item, index}) => (
     <View style={[styles.cardfilled, styles.shadow]} key={index}>
       <Text style={styles.filledText}>{item.product}</Text>
@@ -68,44 +70,53 @@ const StockReport = ({navigation}) => {
     </View>
   );
 
-  const renderItem = ({item, index}) => (
-    <View style={[styles.card, styles.shadow]} key={index}>
-      <Text style={styles.filledText}>{item.product || item.name}</Text>
-      {item.product_type === 'C' ? (
-        <>
-          <View style={styles.cardContainer}>
-            <View style={styles.leftContainer}>
-              <Text style={styles.filledText}>{'Filled'}</Text>
+  // render for active stock
+  const renderItem = ({item, index}) => {
+    return isTypeCustomer && item.product_type === 'NC' ? (
+      <View />
+    ) : (
+      <View style={[styles.card, styles.shadow]} key={index}>
+        <Text style={styles.filledText}>{item.product || item.name}</Text>
+        {item.product_type === 'C' ? (
+          <>
+            <View style={styles.cardContainer}>
+              <View style={styles.leftContainer}>
+                <Text style={styles.filledText}>
+                  {isTypeCustomer ? 'Quantity' : 'Filled'}
+                </Text>
+              </View>
+              <View style={styles.rightContainer}>
+                <Text style={styles.filledValue}>
+                  {item?.filled ?? item.filled_quantity}
+                </Text>
+              </View>
             </View>
-            <View style={styles.rightContainer}>
-              <Text style={styles.filledValue}>
-                {item?.filled ?? item.filled_quantity}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.cardContainer}>
+            {isTypeCustomer ? null : (
+              <View style={styles.cardContainer}>
+                <View style={styles.bottomContainer}>
+                  <Text style={styles.filledText}>{'Empty'}</Text>
+                </View>
+                <View style={styles.bottomContainer}>
+                  <Text style={styles.filledValue}>
+                    {item?.empty ?? item.empty_quantity}
+                  </Text>
+                </View>
+              </View>
+            )}
+          </>
+        ) : (
+          <View style={[styles.cardContainer, {marginTop: 10}]}>
             <View style={styles.bottomContainer}>
-              <Text style={styles.filledText}>{'Empty'}</Text>
+              <Text style={styles.filledText2}>{'Stock'}</Text>
             </View>
             <View style={styles.bottomContainer}>
-              <Text style={styles.filledValue}>
-                {item?.empty ?? item.empty_quantity}
-              </Text>
+              <Text style={styles.filledValue}>{item.stock}</Text>
             </View>
           </View>
-        </>
-      ) : (
-        <View style={[styles.cardContainer, {marginTop: 10}]}>
-          <View style={styles.bottomContainer}>
-            <Text style={styles.filledText2}>{'Stock'}</Text>
-          </View>
-          <View style={styles.bottomContainer}>
-            <Text style={styles.filledValue}>{item.stock}</Text>
-          </View>
-        </View>
-      )}
-    </View>
-  );
+        )}
+      </View>
+    );
+  };
 
   //   if (error) {
   //     return <Text style={{color: 'black'}}>Error</Text>;
@@ -139,7 +150,7 @@ const StockReport = ({navigation}) => {
           </View>
           <View style={[styles.totalfilled, {marginTop: 10}]}>
             <Text style={[styles.textbold, {color: colors.text}]}>
-              Total Customers Filled
+              Customer Location
             </Text>
             <Text style={{color: colors.text}}>
               {cumulativeData?.customerFilled}
@@ -247,17 +258,19 @@ const styles = StyleSheet.create({
   },
   weightText: {marginVertical: 10, fontWeight: '600'},
   filledText: {
-    textAlign: 'center',
+    textAlign: 'left',
     color: 'black',
     fontWeight: 'bold',
+    marginStart: 5,
   },
   filledText2: {
     textAlign: 'center',
     color: 'black',
   },
   filledValue: {
-    textAlign: 'center',
+    textAlign: 'right',
     color: 'black',
+    marginEnd: 5,
   },
   locationsummary: {
     fontSize: 20,

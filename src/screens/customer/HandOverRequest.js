@@ -10,22 +10,21 @@ import string from '../../helpers/strings.json';
 import DropDownFile from '../../components/DropDown';
 import {useSelector} from 'react-redux';
 import BottomAlert from '../../components/BottomAlert';
-import {useHandover} from '../../hooks/useHandover';
 
 const types = [
   {name: 'Filled', id: 'F'},
   {name: 'Empty', id: 'E'},
 ];
 
-const HandOverRequest = ({callApi}) => {
+const HandOverRequest = ({callApi, prodListData, showQuantityError}) => {
   const alertRef = useRef(null);
-  const [quantity, setQuantity] = useState('');
+  const [quantity, setQuantity] = useState('0');
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [SelectedType, setSelectedType] = useState(types[0]);
   const {productinfo, locations} = useSelector(state => state.deliverydata);
   const {extras} = useSelector(state => state.auth);
-  const {createHandoverRequest} = useHandover();
+
   useEffect(() => {
     if (locations) {
       setSelectedLocation(locations[0]);
@@ -34,6 +33,35 @@ const HandOverRequest = ({callApi}) => {
       setSelectedCategory(productinfo[0]);
     }
   }, [locations, productinfo]);
+
+  const checkForMaxQuantity = quantityText => {
+    const matchingProduct = prodListData.find(
+      product => product.id === selectedCategory.id,
+    );
+    // console.log('matchingProduct', JSON.stringify(matchingProduct));
+    let filteredQuantity = null;
+    if (matchingProduct) {
+      if (SelectedType.id === 'F') {
+        filteredQuantity = matchingProduct.filled_stock;
+      } else {
+        filteredQuantity = matchingProduct.empty_stock;
+      }
+    }
+    if (
+      (filteredQuantity && filteredQuantity < quantityText) ||
+      filteredQuantity === 0
+    ) {
+      if (showQuantityError) {
+        setTimeout(() => {
+          showQuantityError(
+            `Quantity cannot be greater than ${filteredQuantity} for ${selectedCategory?.product}`,
+          );
+        }, 600);
+      }
+      return String(filteredQuantity);
+    }
+    return quantityText;
+  };
 
   const addRequestToList = async () => {
     if (!quantity) {
@@ -80,6 +108,8 @@ const HandOverRequest = ({callApi}) => {
             showSearch={false}
             onSelect={item => {
               setSelectedCategory(item);
+              setSelectedType(prevType => ({...prevType, ...types[0]}));
+              setQuantity(prevValue => prevValue - prevValue);
             }}
           />
         </View>
@@ -94,8 +124,10 @@ const HandOverRequest = ({callApi}) => {
             labelField={'name'}
             valueField={'name'}
             showSearch={false}
+            createdCustomer={SelectedType}
             onSelect={item => {
               setSelectedType(item);
+              setQuantity(prevValue => prevValue - prevValue);
             }}
           />
         </View>
@@ -106,8 +138,12 @@ const HandOverRequest = ({callApi}) => {
           <TextInput
             textBreakStrategy="simple"
             style={styles.textinput}
-            onChangeText={setQuantity}
-            value={quantity}
+            onChangeText={text => {
+              const sanitizedText = text.replace(/[^0-9]/g, '');
+              const newQuantity = checkForMaxQuantity(sanitizedText);
+              setQuantity(newQuantity);
+            }}
+            value={String(quantity)}
             keyboardType="numeric"
           />
         </View>

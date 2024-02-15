@@ -35,7 +35,8 @@ const CollectTable = ({onRemove, index, updateData, itemsLength, data}) => {
             showSearch={false}
             onSelect={item => {
               setSelectedWeight(item);
-              calculateRate(item, quantity);
+              setQuantity(prevValue => '0');
+              calculateRate(item, 0);
             }}
           />
         </View>

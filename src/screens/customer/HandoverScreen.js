@@ -96,7 +96,7 @@ export function HandoverScreen({navigation}) {
       ),
     });
   }, [navigation]);
-  console.log('--data--', data);
+  // console.log('--data--', data);
   const onRejectRequest = async item => {
     await updateRequest({id: item.id, status: 'rejected'});
   };
@@ -105,6 +105,7 @@ export function HandoverScreen({navigation}) {
   };
 
   const submitApi = async apidata => {
+    // console.log('--dat--', apidata);
     const {success, error} = await createHandoverRequest(apidata);
     if (success) {
       alertRef1.current.showAlert(
@@ -187,7 +188,13 @@ export function HandoverScreen({navigation}) {
         <Text style={styles.handoverText}>HandOver </Text>
       </TouchableOpacity>
       <BottomSheetComponent ref={parentBottomSheetRef}>
-        <HandOverRequest callApi={submitApi} />
+        <HandOverRequest
+          callApi={submitApi}
+          prodListData={data?.product_list ?? []}
+          showQuantityError={msg => {
+            alertRef1?.current?.showAlert(msg, 'Error');
+          }}
+        />
       </BottomSheetComponent>
       <BottomAlert ref={alertRef1} />
     </SafeAreaView>

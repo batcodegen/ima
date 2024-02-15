@@ -83,11 +83,25 @@ export const useGetDeliveryData = () => {
     }
   };
 
+  const refetchDelivery = () => {
+    try {
+      dispatch(updateLoaderState({isLoading: true}));
+
+      refetch();
+    } catch (e) {
+      formatRequiredFieldsMessage(e);
+    } finally {
+      dispatch(
+        updateLoaderState({isLoading: isLoading || isFetching || false}),
+      );
+    }
+  };
+
   return {
     deliverydata: data?.customerinfo,
     weightsData: data?.productinfo,
     callCreateCustomerApi,
     callCustomerSaleApi,
-    refetchDeliveryData: () => refetch(),
+    refetchDeliveryData: refetchDelivery,
   };
 };

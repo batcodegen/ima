@@ -60,11 +60,17 @@ const DeliverTable = ({
 
   const checkForMaxQuantity = quantityText => {
     const matchingProduct = userProducts.find(
-      product => product.product === selectedWeight.id,
+      product => product.id === selectedWeight.id,
     );
-    console.log(userProducts, selectedWeight);
-    const filteredQuantity = matchingProduct ? matchingProduct.quantity : null;
-    if (filteredQuantity && filteredQuantity < quantityText) {
+    console.log(JSON.stringify(userProducts));
+    const filteredQuantity = matchingProduct
+      ? matchingProduct.available_stock
+      : null;
+    // console.log('filteredQuantity ', filteredQuantity);
+    if (
+      (filteredQuantity && filteredQuantity < quantityText) ||
+      filteredQuantity === 0
+    ) {
       if (showQuantityError) {
         setTimeout(() => {
           showQuantityError(
@@ -92,7 +98,8 @@ const DeliverTable = ({
             showSearch={false}
             onSelect={item => {
               setSelectedWeight(item);
-              calculateRateAndDiscount(item, quantity);
+              setQuantity(prevValue => '0');
+              calculateRateAndDiscount(item, 0);
             }}
           />
         </View>

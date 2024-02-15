@@ -23,8 +23,15 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useGetDeliveryData} from '../hooks/useDelivery';
 import {ROUTES} from '../navigator/routes';
 
-const ProductTable = ({onRemove, index, updateData, itemsLength, data}) => {
-  const [quantity, setQuantity] = useState('1');
+const ProductTable = ({
+  onRemove,
+  index,
+  updateData,
+  itemsLength,
+  data,
+  showQuantityError,
+}) => {
+  const [quantity, setQuantity] = useState('0');
   const [selectedWeight, setSelectedWeight] = useState('');
   const [discount, setDiscount] = useState('0');
 
@@ -43,6 +50,30 @@ const ProductTable = ({onRemove, index, updateData, itemsLength, data}) => {
     });
   };
 
+  const checkForMaxQuantity = quantityText => {
+    const matchingProduct = data.find(
+      product => product.id === selectedWeight.id,
+    );
+    // console.log(JSON.stringify(data));
+    const filteredQuantity = matchingProduct
+      ? matchingProduct.available_stock
+      : null;
+    if (
+      (filteredQuantity && filteredQuantity < quantityText) ||
+      filteredQuantity === 0
+    ) {
+      if (showQuantityError) {
+        setTimeout(() => {
+          showQuantityError(
+            `Quantity cannot be greater than ${filteredQuantity} for ${selectedWeight?.product}`,
+          );
+        }, 600);
+      }
+      return String(filteredQuantity);
+    }
+    return quantityText;
+  };
+
   if (!data) {
     return null;
   }
@@ -58,7 +89,8 @@ const ProductTable = ({onRemove, index, updateData, itemsLength, data}) => {
             showSearch={false}
             onSelect={item => {
               setSelectedWeight(item);
-              calculateRateAndDiscount(item, quantity, discount);
+              setQuantity(prevValue => '0');
+              calculateRateAndDiscount(item, 0, discount);
             }}
           />
         </View>
@@ -70,8 +102,9 @@ const ProductTable = ({onRemove, index, updateData, itemsLength, data}) => {
             keyboardType={'numeric'}
             onChangeText={text => {
               const sanitizedText = text.replace(/[^0-9]/g, '');
-              setQuantity(sanitizedText);
-              calculateRateAndDiscount(selectedWeight, sanitizedText, discount);
+              const newQuantity = checkForMaxQuantity(sanitizedText);
+              setQuantity(newQuantity);
+              calculateRateAndDiscount(selectedWeight, newQuantity, discount);
             }}
           />
         </View>
@@ -393,6 +426,9 @@ const NewCustomer = ({navigation}) => {
                 itemsLength={items.length}
                 updateData={handleUpdate}
                 onRemove={handleRemove}
+                showQuantityError={msg => {
+                  alertRef?.current?.showAlert(msg, 'Error');
+                }}
               />
             </View>
           ))}

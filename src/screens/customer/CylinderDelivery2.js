@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useGetDeliveryData} from '../../hooks/useDelivery';
 import RefreshButton from '../../components/RefreshButton';
 import string from '../../helpers/strings.json';
@@ -53,6 +53,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
   const [balanceAmount, setBalanceAmount] = useState(0);
   const [remarks, setRemarks] = useState('');
   const [modeofpayment, setModeOfPayment] = useState(paymentmode[0].value);
+  const [refetchDone, setRefetchDone] = useState(false);
 
   // redux state
   const {customerinfo, productinfo} = useSelector(state => state.deliverydata);
@@ -96,19 +97,30 @@ const CylinderDelivery2 = ({navigation, route}) => {
     });
   }, [navigation]);
 
-  // save first value as default from customerinfo
-  // useEffect(() => {
-  //   if (customerinfo?.length > 0) {
-  //     setSelectedUserData(customerinfo[0]);
-  //   }
-  // }, [customerinfo]);
+  // after refech is called reset the values
+  useEffect(() => {
+    if (customerinfo?.length > 0 && refetchDone) {
+      const prevSelectedUser = customerinfo.filter(
+        itm => itm.customer_id === selectedUserData?.customer_id,
+      );
+      setSelectedUserData(prevSelectedUser[0]);
+      setSecurityDeposit(0);
+      setPaymentCollected(0);
+      setRemarks('');
+      setImageData(null);
+      // setRefetchDone(false);
+      handleInitData();
+    }
+  }, [customerinfo, refetchDone]);
 
-  const handleInitData = useCallback(() => {
+  const handleInitData = () => {
     let productData = [];
     if (selectedUserData?.product_usages?.length > 0) {
-      productData = selectedUserData.product_usages?.map(usage => {
-        const product = productinfo.find(prod => prod.id === usage.product);
-        return {...usage, ...product};
+      productData = productinfo?.map(usage => {
+        const product = selectedUserData.product_usages.find(
+          prod => prod.product === usage.id,
+        );
+        return {...product, ...usage};
       });
     } else {
       productData = [...productinfo];
@@ -129,7 +141,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
       setCollectItems(prevDate => [{...initData[0], quantity: '0'}]);
       calculateBillAmountAndDiscount(initData);
     }
-  }, [productinfo, selectedUserData, calculateBillAmountAndDiscount]);
+  };
 
   // when customerinfo is saved, create:
   // productlist, default values, bills, etc.
@@ -137,7 +149,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
     if (selectedUserData) {
       handleInitData();
     }
-  }, [selectedUserData, handleInitData]);
+  }, [selectedUserData]);
 
   const handleViewModalPress = () => parentBottomSheetRef.current.focus();
   const handlePresentModalPress = () => {
@@ -190,41 +202,36 @@ const CylinderDelivery2 = ({navigation, route}) => {
     setCollectItems(updatedItems);
   };
 
-  //   console.log('deliverydata', selectedUserData);
+  // console.log('deliverydata', selectedUserData);
 
-  const calculateBillAmountAndDiscount = useCallback(
-    data => {
-      const totalBill = data
-        .filter(item => item.quantity)
-        .reduce((accumulator, item) => {
-          const quantity = parseInt(item.quantity, 10);
-          const price = item.rate || item.weight.price * quantity;
-          return accumulator + price;
-        }, 0);
-      const totalDiscount = data.reduce(
-        (acc, item) => acc + parseFloat(item.calculatedDisc),
-        0.0,
-      );
-      const finalBillAmt = totalBill - totalDiscount;
-      setTotalBillValue(totalBill);
-      setTotalDiscountValue(totalDiscount);
-      setFinalBillAmount(finalBillAmt);
-      calculatePaymentToBeCollected(finalBillAmt, securitydeposit);
-    },
-    [securitydeposit, calculatePaymentToBeCollected],
-  );
+  const calculateBillAmountAndDiscount = data => {
+    const totalBill = data
+      .filter(item => item.quantity)
+      .reduce((accumulator, item) => {
+        const quantity = parseInt(item.quantity, 10);
+        const price =
+          item.rate || (item.weight?.price ?? item.weight) * quantity;
+        return accumulator + price;
+      }, 0);
+    const totalDiscount = data.reduce(
+      (acc, item) => acc + parseFloat(item.calculatedDisc),
+      0.0,
+    );
+    const finalBillAmt = totalBill - totalDiscount;
+    setTotalBillValue(totalBill);
+    setTotalDiscountValue(totalDiscount);
+    setFinalBillAmount(finalBillAmt);
+    calculatePaymentToBeCollected(finalBillAmt, securitydeposit);
+  };
 
-  const calculatePaymentToBeCollected = useCallback(
-    (finalBillAmt, depositCollected) => {
-      const finalPaymentToCollect =
-        finalBillAmt +
-        parseFloat(depositCollected) +
-        (selectedUserData?.pending_payment ?? 0);
-      setPaymentToBeCollected(finalPaymentToCollect);
-      calculateBalanceAmount(finalPaymentToCollect, paymentcollected);
-    },
-    [paymentcollected, selectedUserData?.pending_payment],
-  );
+  const calculatePaymentToBeCollected = (finalBillAmt, depositCollected) => {
+    const finalPaymentToCollect =
+      finalBillAmt +
+      parseFloat(depositCollected) +
+      (selectedUserData?.pending_payment ?? 0);
+    setPaymentToBeCollected(finalPaymentToCollect);
+    calculateBalanceAmount(finalPaymentToCollect, paymentcollected);
+  };
 
   const calculateBalanceAmount = (toBeCollectedAmt, collectedAmt) => {
     setBalanceAmount(toBeCollectedAmt - collectedAmt);
@@ -261,14 +268,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
           onPress: () => {
             if (shouldCloseModal) {
               refetchDeliveryData();
-              setTimeout(() => {
-                setSelectedUserData(customerinfo[0]);
-                setSecurityDeposit(0);
-                setPaymentCollected(0);
-                setRemarks('');
-                setImageData(null);
-                handleInitData();
-              }, 1000);
+              setRefetchDone(prevState => !prevState);
             }
           },
         },
@@ -293,6 +293,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
         product: item.weight.id,
         quantity: parseInt(item.quantity, 10) || 0,
         unit_price: item.weight.price,
+        discount_rate: item.weight.discount,
         total_price: item.rate,
         cylinder_status: 'F',
       }));
@@ -308,7 +309,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
           payment_screenshot: imageData?.base64 ?? '',
         },
       };
-      console.log('dat--', JSON.stringify(apidata));
+      // console.log('dat--', JSON.stringify(apidata));
       const {success, error} = await callCustomerSaleApi(apidata);
       if (success) {
         showAlert('Success', 'Sale created successfully', true);
@@ -317,6 +318,10 @@ const CylinderDelivery2 = ({navigation, route}) => {
       }
     }
   };
+
+  const collectedListProduct = useMemo(() => {
+    return productList.filter(prod => prod.product_type === 'C');
+  }, [productList]);
 
   const HeaderTitleView = useCallback(
     ({style, title}) => (
@@ -395,7 +400,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
         <TableView title={string.cylinderHeld} value={numberOfCylinder} />
         <TableView
           title={string.securityDeposit}
-          value={formatToLocalRupee(selectedUserData?.securityDeposit)}
+          value={formatToLocalRupee(selectedUserData?.security_deposit)}
         />
 
         {/* Delivered view */}
@@ -446,7 +451,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
                   itemsLength={items.length}
                   updateData={handleUpdate}
                   onRemove={handleRemove}
-                  userProducts={selectedUserData?.product_usages ?? []}
+                  userProducts={productList ?? []}
                   showQuantityError={msg => {
                     alertRef?.current?.showAlert(msg, 'Error');
                   }}
@@ -497,7 +502,7 @@ const CylinderDelivery2 = ({navigation, route}) => {
                 <View style={styles.tableContainer} key={_.id}>
                   <CollectTable
                     index={index}
-                    data={productList}
+                    data={collectedListProduct}
                     itemsLength={collectItems.length}
                     updateData={handleCollectUpdate}
                     onRemove={handleCollectRemove}
@@ -527,7 +532,8 @@ const CylinderDelivery2 = ({navigation, route}) => {
             value={String(securitydeposit)}
             ontextupdate={depositValue => {
               setSecurityDeposit(depositValue);
-              calculatePaymentToBeCollected(finalBillAmount, depositValue);
+              const valText = depositValue !== '' ? depositValue : 0;
+              calculatePaymentToBeCollected(finalBillAmount, valText);
             }}
             // editable={items !== null && collectItems !== null}
           />
