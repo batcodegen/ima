@@ -243,11 +243,9 @@ const NewCustomer = ({navigation}) => {
       !name ||
       !billingAddress ||
       !code ||
-      !gstNumber ||
       !deliveryAddress ||
       !contactPerson ||
-      !phonenum ||
-      !selectPdfFile
+      !phonenum
     ) {
       alertRef.current.showAlert('All fields are required.', 'Error');
     } else {
@@ -263,10 +261,13 @@ const NewCustomer = ({navigation}) => {
         product_usages: items,
         gst_certificate: selectPdfFile,
         security_deposit: Number(securityDeposit),
-        pending_payment: Number(pendingPayment),
       };
       // console.log('sent data--', custCreateData);
-      updateNewCustomerData(custCreateData);
+      updateNewCustomerData(
+        pendingPayment
+          ? {...custCreateData, pending_payment: Number(pendingPayment)}
+          : custCreateData,
+      );
     }
   };
 

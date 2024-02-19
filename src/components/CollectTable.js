@@ -17,6 +17,7 @@ const CollectTable = ({onRemove, index, updateData, itemsLength, data}) => {
     if (data) {
       setQuantity('0');
       setSelectedWeight(data?.[0]);
+      calculateRate(data?.[0], 0);
     }
   }, [data]);
 

@@ -1,18 +1,17 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {updateLoaderState} from '../redux/loaderReducer';
 import {useEffect} from 'react';
-import {
-  useGetDeliveryDataQuery,
-  useLazyGetDeliveryDataQuery,
-} from '../api/admin/delivery';
+import {useGetDeliveryDataQuery} from '../api/admin/delivery';
 import {useCreateCustomerMutation} from '../api/customer/newcustomer';
 import {formatRequiredFieldsMessage} from '../helpers/utils';
 import {onDeliveryFetchSuccess} from '../redux/deliveryReducer';
 import {useCreateSaleMutation} from '../api/customer/createSale';
 
 export const useGetDeliveryData = () => {
-  const {data, error, isLoading, isFetching, refetch} =
-    useGetDeliveryDataQuery();
+  const {data, error, isLoading, isFetching, refetch} = useGetDeliveryDataQuery(
+    null,
+    {refetchOnMountOrArgChange: true},
+  );
   const [createCustomer] = useCreateCustomerMutation();
   const [createSale] = useCreateSaleMutation();
   const dispatch = useDispatch();
@@ -83,17 +82,16 @@ export const useGetDeliveryData = () => {
     }
   };
 
-  const refetchDelivery = () => {
+  const refetchDelivery = async () => {
     try {
       dispatch(updateLoaderState({isLoading: true}));
 
-      refetch();
+      const response = await refetch();
+      if (response?.data) {
+        return response.data;
+      }
     } catch (e) {
       formatRequiredFieldsMessage(e);
-    } finally {
-      dispatch(
-        updateLoaderState({isLoading: isLoading || isFetching || false}),
-      );
     }
   };
 

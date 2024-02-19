@@ -10,7 +10,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {useGetDeliveryData} from '../../hooks/useDelivery';
 import RefreshButton from '../../components/RefreshButton';
 import string from '../../helpers/strings.json';
@@ -90,7 +97,9 @@ const CylinderDelivery2 = ({navigation, route}) => {
       headerRight: props => (
         <RefreshButton
           onPress={() => {
-            refetchDeliveryData();
+            refetchDeliveryData().then(response => {
+              handleInitData(response?.productinfo);
+            });
           }}
         />
       ),
@@ -113,17 +122,18 @@ const CylinderDelivery2 = ({navigation, route}) => {
     }
   }, [customerinfo, refetchDone]);
 
-  const handleInitData = () => {
+  const handleInitData = newprodInfo => {
+    let prodInfoData = newprodInfo ?? productinfo;
     let productData = [];
     if (selectedUserData?.product_usages?.length > 0) {
-      productData = productinfo?.map(usage => {
+      productData = prodInfoData?.map(usage => {
         const product = selectedUserData.product_usages.find(
           prod => prod.product === usage.id,
         );
         return {...product, ...usage};
       });
     } else {
-      productData = [...productinfo];
+      productData = [...prodInfoData];
     }
     if (productData?.length > 0) {
       const initData = [
